@@ -15,10 +15,7 @@
     padding: 24px;
     color: #1a1b26;
   }
-.container {
-    max-width: 1500px;
-    margin: 0 auto;
-  }
+.container { max-width: 1500px; margin: 0 auto; }
 .header {
     background: rgba(255, 255, 255, 0.95);
     backdrop-filter: blur(20px);
@@ -56,9 +53,7 @@
     border-radius: 10px;
     cursor: pointer;
     font-size: 18px;
-    transition: all 0.2s;
   }
-.mes-navegador button:hover { transform: scale(1.1); }
 .mes-navegador h2 {
     flex: 1;
     text-align: center;
@@ -94,7 +89,6 @@
     font-weight: 600;
     cursor: pointer;
     font-size: 14px;
-    transition: all 0.2s;
     display: inline-flex;
     align-items: center;
     gap: 8px;
@@ -175,7 +169,6 @@
     padding: 8px 10px;
     border-radius: 8px;
     margin-right: 6px;
-    transition: all 0.2s;
     font-size: 14px;
   }
 .btn-acao.editar { color: #2563eb; }
@@ -213,12 +206,10 @@
     max-width: 500px;
     max-height: 90vh;
     overflow-y: auto;
-    box-shadow: 0 20px 60px rgba(0,0,0,0.3);
   }
 .modal-content h3 {
     margin-bottom: 24px;
     font-size: 20px;
-    color: #1a1b26;
   }
 .form-group {
     margin-bottom: 16px;
@@ -236,11 +227,6 @@
     border: 1px solid #e2e8f0;
     border-radius: 8px;
     font-size: 14px;
-    font-family: 'Poppins', sans-serif;
-  }
-.form-group input:focus,.form-group select:focus {
-    outline: none;
-    border-color: #667eea;
   }
 .modal-actions {
     display: flex;
@@ -261,13 +247,13 @@
 <div class="container">
   <div class="header">
     <h1><i class="fas fa-file-invoice-dollar"></i> Contas a Pagar - BROS</h1>
-    <p>Clique em ✏️ pra editar, 🗑️ pra excluir. Navegue pelos meses no topo.</p>
+    <p>Clique em ✏️ pra editar, 🗑️ pra excluir</p>
   </div>
 
   <div class="mes-navegador">
-    <button onclick="mudarMes(-1)"><i class="fas fa-chevron-left"></i></button>
+    <button id="btnMesAnt"><i class="fas fa-chevron-left"></i></button>
     <h2 id="mesAtual"></h2>
-    <button onclick="mudarMes(1)"><i class="fas fa-chevron-right"></i></button>
+    <button id="btnMesProx"><i class="fas fa-chevron-right"></i></button>
   </div>
 
   <div class="stats" id="stats"></div>
@@ -283,8 +269,8 @@
       <option value="Em Aberto">Em Aberto</option>
       <option value="Aguardando NF">Aguardando NF</option>
     </select>
-    <button class="btn btn-primary" onclick="abrirModal(null)"><i class="fas fa-plus"></i> Nova Conta</button>
-    <button class="btn btn-ghost" onclick="gerarRecorrencias()"><i class="fas fa-sync"></i> Gerar Mês Seguinte</button>
+    <button class="btn btn-primary" id="btnNova"><i class="fas fa-plus"></i> Nova Conta</button>
+    <button class="btn btn-ghost" id="btnGerar"><i class="fas fa-sync"></i> Gerar Mês Seguinte</button>
   </div>
 
   <div class="table-wrapper">
@@ -315,7 +301,6 @@
   </div>
 </div>
 
-<!-- MODAL EDIÇÃO -->
 <div id="modal" class="modal">
   <div class="modal-content">
     <h3 id="modalTitulo">Editar Conta</h3>
@@ -352,8 +337,8 @@
       </select>
     </div>
     <div class="modal-actions">
-      <button class="btn btn-ghost" onclick="fecharModal()">Cancelar</button>
-      <button class="btn btn-primary" onclick="salvarModal()">Salvar</button>
+      <button class="btn btn-ghost" id="btnCancelar">Cancelar</button>
+      <button class="btn btn-primary" id="btnSalvar">Salvar</button>
     </div>
   </div>
 </div>
@@ -363,7 +348,7 @@ let mesAtual = new Date();
 mesAtual.setDate(1);
 let editandoId = null;
 
-let contas = JSON.parse(localStorage.getItem('contasBROS') || 'null') || [];
+let contas = JSON.parse(localStorage.getItem('contasBROS') || '[]');
 
 const meses = ['Janeiro','Fevereiro','Março','Abril','Maio','Junho','Julho','Agosto','Setembro','Outubro','Novembro','Dezembro'];
 
@@ -419,13 +404,15 @@ function renderizar() {
   });
 
   const tbody = document.getElementById('tbody');
+  tbody.innerHTML = '';
+
   if(filtradas.length === 0) {
     tbody.innerHTML = `<tr><td colspan="17"><div class="empty"><i class="fas fa-calendar-check"></i><p>Nenhuma conta neste mês</p></div></td></tr>`;
   } else {
-    tbody.innerHTML = filtradas.map(c => {
+    filtradas.forEach(c => {
       const atraso = calcularAtraso(c.vencimento);
-
-      return `<tr>
+      const tr = document.createElement('tr');
+      tr.innerHTML = `
         <td><strong>${c.conta}</strong></td>
         <td>${c.protocolo || '-'}</td>
         <td>${formatarValor(c.valor)}</td>
@@ -435,15 +422,32 @@ function renderizar() {
         <td class="atraso ${atraso.classe}">${atraso.dias}</td>
         <td>${formatarData(c.vencimento)}</td>
         ${['docs','nf','titu','prot','anex','pranex','tt','baxt'].map(k =>
-          `<td><input type="checkbox" ${c[k]?'checked':''} onchange="toggleCheck('${c.id}', '${k}', this.checked)"></td>`
+          `<td><input type="checkbox" ${c[k]?'checked':''} data-id="${c.id}" data-campo="${k}"></td>`
         ).join('')}
         <td>
-          <button class="btn-acao editar" onclick="abrirModal('${c.id}')" title="Editar"><i class="fas fa-pen"></i></button>
-          <button class="btn-acao excluir" onclick="excluirConta('${c.id}')" title="Excluir"><i class="fas fa-trash"></i></button>
+          <button class="btn-acao editar" data-id="${c.id}" title="Editar"><i class="fas fa-pen"></i></button>
+          <button class="btn-acao excluir" data-id="${c.id}" title="Excluir"><i class="fas fa-trash"></i></button>
         </td>
-      </tr>`;
-    }).join('');
+      `;
+      tbody.appendChild(tr);
+    });
   }
+
+  // Adiciona eventos depois de criar os elementos
+  document.querySelectorAll('.btn-acao.editar').forEach(btn => {
+    btn.onclick = () => abrirModal(btn.dataset.id);
+  });
+
+  document.querySelectorAll('.btn-acao.excluir').forEach(btn => {
+    btn.onclick = () => excluirConta(btn.dataset.id);
+  });
+
+  document.querySelectorAll('input[type="checkbox"]').forEach(chk => {
+    chk.onchange = () => {
+      const c = contas.find(x => x.id === chk.dataset.id);
+      if(c) { c[chk.dataset.campo] = chk.checked; salvar(); }
+    };
+  });
 
   const total = filtradas.length;
   const pagas = filtradas.filter(c => c.status === 'Paga').length;
@@ -475,7 +479,7 @@ function abrirModal(id) {
   const modal = document.getElementById('modal');
 
   if(id) {
-    const c = contas.find(x => String(x.id) === String(id));
+    const c = contas.find(x => x.id === id);
     document.getElementById('modalTitulo').textContent = 'Editar Conta';
     document.getElementById('fConta').value = c.conta;
     document.getElementById('fProtocolo').value = c.protocolo || '';
@@ -519,7 +523,7 @@ function salvarModal() {
   }
 
   if(editandoId) {
-    const c = contas.find(x => String(x.id) === String(editandoId));
+    const c = contas.find(x => x.id === editandoId);
     Object.assign(c, dados);
   } else {
     contas.push({
@@ -537,16 +541,9 @@ function salvarModal() {
 
 function excluirConta(id) {
   if(confirm('Excluir esta conta permanentemente?')) {
-    const idStr = String(id);
-    contas = contas.filter(c => String(c.id)!= idStr);
-    localStorage.setItem('contasBROS', JSON.stringify(contas));
-    renderizar();
+    contas = contas.filter(c => c.id!== id);
+    salvar();
   }
-}
-
-function toggleCheck(id, campo, valor) {
-  const c = contas.find(x => String(x.id) === String(id));
-  if(c) { c[campo] = valor; salvar(); }
 }
 
 function gerarRecorrencias() {
@@ -559,7 +556,7 @@ function gerarRecorrencias() {
 
   recorrentes.forEach(c => {
     const jaExiste = contas.some(x =>
-      String(x.parentId) === String(c.id) && chaveMes(new Date(x.vencimento + 'T00:00:00')) === chaveProximo
+      x.parentId === c.id && chaveMes(new Date(x.vencimento + 'T00:00:00')) === chaveProximo
     );
 
     if(!jaExiste) {
@@ -584,9 +581,15 @@ function gerarRecorrencias() {
   salvar();
 }
 
+// Eventos
+document.getElementById('btnMesAnt').onclick = () => mudarMes(-1);
+document.getElementById('btnMesProx').onclick = () => mudarMes(1);
+document.getElementById('btnNova').onclick = () => abrirModal(null);
+document.getElementById('btnGerar').onclick = gerarRecorrencias;
+document.getElementById('btnCancelar').onclick = fecharModal;
+document.getElementById('btnSalvar').onclick = salvarModal;
 document.getElementById('busca').oninput = renderizar;
 document.getElementById('filtroStatus').onchange = renderizar;
-
 document.getElementById('modal').onclick = (e) => {
   if(e.target.id === 'modal') fecharModal();
 }
