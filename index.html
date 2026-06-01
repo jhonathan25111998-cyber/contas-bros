@@ -37,6 +37,36 @@
   }
 .header p { opacity: 0.7; font-size: 14px; }
 
+.mes-navegador {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+    margin-bottom: 20px;
+    background: white;
+    padding: 16px 20px;
+    border-radius: 16px;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.08);
+  }
+.mes-navegador button {
+    background: linear-gradient(135deg, #667eea, #764ba2);
+    color: white;
+    border: none;
+    width: 40px;
+    height: 40px;
+    border-radius: 10px;
+    cursor: pointer;
+    font-size: 18px;
+    transition: all 0.2s;
+  }
+.mes-navegador button:hover { transform: scale(1.1); }
+.mes-navegador h2 {
+    flex: 1;
+    text-align: center;
+    font-size: 22px;
+    font-weight: 700;
+    color: #1a1b26;
+  }
+
 .toolbar {
     display: flex;
     gap: 12px;
@@ -154,6 +184,7 @@
 .badge.aberto { background: rgba(245,158,11,0.15); color: #d97706; }
 .badge.aguardando { background: rgba(59,130,246,0.15); color: #2563eb; }
 .badge.mensal { background: rgba(102,126,234,0.15); color: #667eea; }
+.badge.recorrente { background: rgba(168,85,247,0.15); color: #a855f7; }
 
 .atraso {
     font-weight: 700;
@@ -197,10 +228,10 @@
 .empty i { font-size: 48px; margin-bottom: 16px; }
 
   @media (max-width: 768px) {
- .table-wrapper { overflow-x: auto; }
-    table { min-width: 1000px; }
- .toolbar { flex-direction: column; }
- .busca { width: 100%; }
+.table-wrapper { overflow-x: auto; }
+    table { min-width: 1050px; }
+.toolbar { flex-direction: column; }
+.busca { width: 100%; }
   }
 </style>
 </head>
@@ -208,7 +239,13 @@
 <div class="container">
   <div class="header">
     <h1><i class="fas fa-file-invoice-dollar"></i> Contas a Pagar - BROS</h1>
-    <p>Controle de contas mensal. Clique nos campos para editar. Dados salvos automaticamente.</p>
+    <p>Contas do mês vigente. Use as setas pra navegar entre meses. Recorrência gera parcelas automático.</p>
+  </div>
+
+  <div class="mes-navegador">
+    <button onclick="mudarMes(-1)"><i class="fas fa-chevron-left"></i></button>
+    <h2 id="mesAtual"></h2>
+    <button onclick="mudarMes(1)"><i class="fas fa-chevron-right"></i></button>
   </div>
 
   <div class="stats" id="stats"></div>
@@ -227,6 +264,7 @@
       </select>
     </div>
     <button class="btn btn-primary" onclick="adicionarConta()"><i class="fas fa-plus"></i> Nova Conta</button>
+    <button class="btn btn-ghost" onclick="gerarRecorrencias()"><i class="fas fa-sync"></i> Gerar Mês Seguinte</button>
     <button class="btn btn-ghost" onclick="exportarCSV()"><i class="fas fa-download"></i> Exportar CSV</button>
     <button class="btn btn-ghost" onclick="importarCSV()"><i class="fas fa-upload"></i> Importar CSV</button>
     <input type="file" id="inputCSV" accept=".csv" style="display:none" onchange="lerCSV(event)">
@@ -240,6 +278,7 @@
           <th>Protocolo</th>
           <th>Valor</th>
           <th>Tipo</th>
+          <th>Recorrência</th>
           <th>Status</th>
           <th>Atraso</th>
           <th>Vencimento</th>
@@ -260,13 +299,19 @@
 </div>
 
 <script>
+let mesAtual = new Date();
+mesAtual.setDate(1); // Força dia 1 pra evitar bug de 31->30
+
 let contas = JSON.parse(localStorage.getItem('contasBROS') || 'null') || [
-  {id:1, conta:'CPA BROS BRUNA CENOSKI LIMPEZA LOJA INACIO MARTINS ABRIL 2026', protocolo:'', valor:720, tipo:'MENSAL', status:'Paga', vencimento:'2026-04-06', docs:false, nf:false, titu:false, prot:false, anex:false, pranex:false, tt:false, baxt:false},
-  {id:2, conta:'POSTO NELSON PERUSSOLO INACIO', protocolo:'', valor:0, tipo:'MENSAL', status:'Em Aberto', vencimento:'2026-04-06', docs:false, nf:false, titu:false, prot:false, anex:false, pranex:false, tt:false, baxt:false},
-  {id:3, conta:'SAMUEL GRETSKI', protocolo:'', valor:0, tipo:'MENSAL', status:'Aguardando NF', vencimento:'2026-04-06', docs:false, nf:false, titu:false, prot:false, anex:false, pranex:false, tt:false, baxt:false},
-  {id:4, conta:'CLAUDIO RAUCK', protocolo:'', valor:0, tipo:'MENSAL', status:'', vencimento:'2026-04-06', docs:false, nf:false, titu:false, prot:false, anex:false, pranex:false, tt:false, baxt:false},
-  {id:5, conta:'POSTO SÃO MATEUS', protocolo:'', valor:0, tipo:'MENSAL', status:'', vencimento:'2026-06-10', docs:false, nf:false, titu:false, prot:false, anex:false, pranex:false, tt:false, baxt:false}
+  {id:crypto.randomUUID(), conta:'CPA BROS BRUNA CENOSKI LIMPEZA', protocolo:'', valor:720, tipo:'MENSAL', recorrencia:'mensal', status:'Paga', vencimento:'2026-04-06', docs:false, nf:false, titu:false, prot:false, anex:false, pranex:false, tt:false, baxt:false, parentId:null},
+  {id:crypto.randomUUID(), conta:'POSTO NELSON PERUSSOLO', protocolo:'', valor:0, tipo:'MENSAL', recorrencia:'', status:'Em Aberto', vencimento:'2026-04-06', docs:false, nf:false, titu:false, prot:false, anex:false, pranex:false, tt:false, baxt:false, parentId:null}
 ];
+
+const meses = ['Janeiro','Fevereiro','Março','Abril','Maio','Junho','Julho','Agosto','Setembro','Outubro','Novembro','Dezembro'];
+
+function chaveMes(data) {
+  return `${data.getFullYear()}-${String(data.getMonth()+1).padStart(2,'0')}`;
+}
 
 function calcularAtraso(vencimento) {
   if(!vencimento) return {dias:0, classe:'ok'};
@@ -295,30 +340,46 @@ function salvar() {
   renderizar();
 }
 
+function mudarMes(direcao) {
+  mesAtual.setMonth(mesAtual.getMonth() + direcao);
+  renderizar();
+}
+
 function renderizar() {
+  document.getElementById('mesAtual').textContent = `${meses[mesAtual.getMonth()]} de ${mesAtual.getFullYear()}`;
+
+  const chave = chaveMes(mesAtual);
   const busca = document.getElementById('busca').value.toLowerCase();
   const filtroStatus = document.getElementById('filtroStatus').value;
 
   let filtradas = contas.filter(c => {
+    const mesConta = chaveMes(new Date(c.vencimento + 'T00:00:00'));
+    const matchMes = mesConta === chave;
     const matchBusca = c.conta.toLowerCase().includes(busca);
     const matchStatus = filtroStatus === 'todos' || c.status === filtroStatus;
-    return matchBusca && matchStatus;
+    return matchMes && matchBusca && matchStatus;
   });
 
   const tbody = document.getElementById('tbody');
   if(filtradas.length === 0) {
-    tbody.innerHTML = `<tr><td colspan="16"><div class="empty"><i class="fas fa-inbox"></i><p>Nenhuma conta encontrada</p></div></td></tr>`;
+    tbody.innerHTML = `<tr><td colspan="17"><div class="empty"><i class="fas fa-calendar-check"></i><p>Nenhuma conta neste mês</p></div></td></tr>`;
   } else {
     tbody.innerHTML = filtradas.map(c => {
       const atraso = calcularAtraso(c.vencimento);
 
       return `<tr>
-        <td><input type="text" class="edit-input" value="${c.conta}" onchange="mudarConta(${c.id}, this.value)"></td>
-        <td><input type="text" class="edit-input protocolo-input" value="${c.protocolo || ''}" placeholder="Nº" onchange="mudarProtocolo(${c.id}, this.value)"></td>
+        <td><input type="text" class="edit-input" value="${c.conta}" onchange="mudarConta('${c.id}', this.value)"></td>
+        <td><input type="text" class="edit-input protocolo-input" value="${c.protocolo || ''}" placeholder="Nº" onchange="mudarProtocolo('${c.id}', this.value)"></td>
         <td>${formatarValor(c.valor)}</td>
         <td><span class="badge mensal">${c.tipo}</span></td>
         <td>
-          <select class="status-select" onchange="mudarStatus(${c.id}, this.value)">
+          <select class="status-select" onchange="mudarRecorrencia('${c.id}', this.value)">
+            <option value="" ${c.recorrencia===''?'selected':''}>Única</option>
+            <option value="mensal" ${c.recorrencia==='mensal'?'selected':''}>Mensal</option>
+          </select>
+        </td>
+        <td>
+          <select class="status-select" onchange="mudarStatus('${c.id}', this.value)">
             <option value="">-</option>
             <option value="Paga" ${c.status==='Paga'?'selected':''}>Paga</option>
             <option value="Em Aberto" ${c.status==='Em Aberto'?'selected':''}>Em Aberto</option>
@@ -328,24 +389,24 @@ function renderizar() {
         <td class="atraso ${atraso.classe}">${atraso.dias}</td>
         <td>${formatarData(c.vencimento)}</td>
         ${['docs','nf','titu','prot','anex','pranex'].map(k =>
-          `<td><input type="checkbox" ${c[k]?'checked':''} onchange="toggleCheck(${c.id}, '${k}', this.checked)"></td>`
+          `<td><input type="checkbox" ${c[k]?'checked':''} onchange="toggleCheck('${c.id}', '${k}', this.checked)"></td>`
         ).join('')}
         ${['tt','baxt'].map(k =>
-          `<td><input type="checkbox" ${c[k]?'checked':''} onchange="toggleCheck(${c.id}, '${k}', this.checked)"></td>`
+          `<td><input type="checkbox" ${c[k]?'checked':''} onchange="toggleCheck('${c.id}', '${k}', this.checked)"></td>`
         ).join('')}
-        <td><button onclick="excluirConta(${c.id})" style="background:none;border:none;color:#ef4444;cursor:pointer;"><i class="fas fa-trash"></i></button></td>
+        <td><button onclick="excluirConta('${c.id}')" style="background:none;border:none;color:#ef4444;cursor:pointer;"><i class="fas fa-trash"></i></button></td>
       </tr>`;
     }).join('');
   }
 
-  const total = contas.length;
-  const pagas = contas.filter(c => c.status === 'Paga').length;
-  const abertas = contas.filter(c => c.status === 'Em Aberto').length;
-  const valorTotal = contas.reduce((acc, c) => acc + (c.valor || 0), 0);
+  const total = filtradas.length;
+  const pagas = filtradas.filter(c => c.status === 'Paga').length;
+  const abertas = filtradas.filter(c => c.status === 'Em Aberto').length;
+  const valorTotal = filtradas.reduce((acc, c) => acc + (c.valor || 0), 0);
 
   document.getElementById('stats').innerHTML = `
     <div class="stat-card">
-      <div class="stat-label">Total de Contas</div>
+      <div class="stat-label">Contas do Mês</div>
       <div class="stat-value">${total}</div>
     </div>
     <div class="stat-card">
@@ -367,12 +428,17 @@ function adicionarConta() {
   const conta = prompt('Nome da conta:');
   if(!conta) return;
   const valor = parseFloat(prompt('Valor R$:') || 0);
-  const vencimento = prompt('Data vencimento AAAA-MM-DD:');
-  const protocolo = prompt('Nº Protocolo:') || '';
+  const dia = prompt('Dia do vencimento 1-31:') || '5';
+  const recorrencia = confirm('É recorrência mensal? OK=Sim / Cancelar=Não')? 'mensal' : '';
+
+  const ano = mesAtual.getFullYear();
+  const mes = String(mesAtual.getMonth()+1).padStart(2,'0');
+  const vencimento = `${ano}-${mes}-${String(dia).padStart(2,'0')}`;
+
   contas.push({
     id: crypto.randomUUID(),
-    conta, protocolo, valor, tipo:'MENSAL', status:'', vencimento,
-    docs:false, nf:false, titu:false, prot:false, anex:false, pranex:false, tt:false, baxt:false
+    conta, protocolo:'', valor, tipo:'MENSAL', recorrencia, status:'', vencimento,
+    docs:false, nf:false, titu:false, prot:false, anex:false, pranex:false, tt:false, baxt:false, parentId:null
   });
   salvar();
 }
@@ -389,9 +455,19 @@ function mudarConta(id, valor) {
   if(c) { c.conta = valor; salvar(); }
 }
 
+function mudarProtocolo(id, valor) {
+  const c = contas.find(x => x.id === id);
+  if(c) { c.protocolo = valor; salvar(); }
+}
+
 function mudarStatus(id, status) {
   const c = contas.find(x => x.id === id);
   if(c) { c.status = status; salvar(); }
+}
+
+function mudarRecorrencia(id, valor) {
+  const c = contas.find(x => x.id === id);
+  if(c) { c.recorrencia = valor; salvar(); }
 }
 
 function toggleCheck(id, campo, valor) {
@@ -399,16 +475,50 @@ function toggleCheck(id, campo, valor) {
   if(c) { c[campo] = valor; salvar(); }
 }
 
-function mudarProtocolo(id, valor) {
-  const c = contas.find(x => x.id === id);
-  if(c) { c.protocolo = valor; salvar(); }
+function gerarRecorrencias() {
+  const proximoMes = new Date(mesAtual);
+  proximoMes.setMonth(proximoMes.getMonth() + 1);
+  const chaveProximo = chaveMes(proximoMes);
+
+  const recorrentes = contas.filter(c => c.recorrencia === 'mensal');
+  let criadas = 0;
+
+  recorrentes.forEach(c => {
+    const jaExiste = contas.some(x =>
+      x.parentId === c.id && chaveMes(new Date(x.vencimento + 'T00:00:00')) === chaveProximo
+    );
+
+    if(!jaExiste) {
+      const novaData = new Date(c.vencimento);
+      novaData.setMonth(novaData.getMonth() + 1);
+      const novaVenc = `${novaData.getFullYear()}-${String(novaData.getMonth()+1).padStart(2,'0')}-${String(novaData.getDate()).padStart(2,'0')}`;
+
+      contas.push({
+       ...c,
+        id: crypto.randomUUID(),
+        vencimento: novaVenc,
+        status: '',
+        protocolo: '',
+        docs:false, nf:false, titu:false, prot:false, anex:false, pranex:false, tt:false, baxt:false,
+        parentId: c.id
+      });
+      criadas++;
+    }
+  });
+
+  if(criadas > 0) {
+    alert(`✅ ${criadas} conta(s) recorrente(s) gerada(s) para ${meses[proximoMes.getMonth()]}`);
+    salvar();
+  } else {
+    alert('Nenhuma recorrência nova pra gerar neste mês');
+  }
 }
 
 function exportarCSV() {
-  const headers = ['Conta','Protocolo','Valor','Tipo','Status','Vencimento','Docs','NF','Titu','Prot','Anex','PrAnex','tt','BaixT'];
+  const headers = ['Conta','Protocolo','Valor','Tipo','Recorrencia','Status','Vencimento','Docs','NF','Titu','Prot','Anex','PrAnex','tt','BaixT','ParentId'];
   const linhas = contas.map(c => [
-    `"${c.conta}"`, `"${c.protocolo || ''}"`, c.valor, c.tipo, c.status, c.vencimento,
-    c.docs, c.nf, c.titu, c.prot, c.anex, c.pranex, c.tt, c.baxt
+    `"${c.conta}"`, `"${c.protocolo || ''}"`, c.valor, c.tipo, c.recorrencia, c.status, c.vencimento,
+    c.docs, c.nf, c.titu, c.prot, c.anex, c.pranex, c.tt, c.baxt, c.parentId || ''
   ].join(','));
 
   const csv = [headers.join(','),...linhas].join('\n');
@@ -431,13 +541,13 @@ function lerCSV(e) {
     const linhas = ev.target.result.split('\n').slice(1);
     contas = linhas.filter(l => l.trim()).map((l) => {
       const partes = l.match(/(".*?"|[^",]+)(?=\s*,|\s*$)/g) || [];
-      const [conta, protocolo, valor, tipo, status, vencimento, docs, nf, titu, prot, anex, pranex, tt, baxt] = partes.map(p => p.replace(/"/g, '').trim());
+      const [conta, protocolo, valor, tipo, recorrencia, status, vencimento, docs, nf, titu, prot, anex, pranex, tt, baxt, parentId] = partes.map(p => p.replace(/"/g, '').trim());
       return {
         id: crypto.randomUUID(),
-        conta, protocolo: protocolo || '', valor: parseFloat(valor)||0, tipo, status, vencimento,
+        conta, protocolo: protocolo || '', valor: parseFloat(valor)||0, tipo, recorrencia: recorrencia||'', status, vencimento,
         docs: docs==='true', nf: nf==='true', titu: titu==='true',
         prot: prot==='true', anex: anex==='true', pranex: pranex==='true',
-        tt: tt==='true', baxt: baxt==='true'
+        tt: tt==='true', baxt: baxt==='true', parentId: parentId||null
       };
     });
     salvar();
