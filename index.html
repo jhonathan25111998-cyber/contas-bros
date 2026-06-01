@@ -1,0 +1,428 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Contas a Pagar - BROS</title>
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+<style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+  body {
+    font-family: 'Poppins', sans-serif;
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    min-height: 100vh;
+    padding: 24px;
+    color: #1a1b26;
+  }
+ .container {
+    max-width: 1400px;
+    margin: 0 auto;
+  }
+ .header {
+    background: rgba(255, 255, 255, 0.95);
+    backdrop-filter: blur(20px);
+    border-radius: 24px;
+    padding: 32px;
+    margin-bottom: 24px;
+    box-shadow: 0 8px 32px rgba(0,0,0,0.12);
+  }
+ .header h1 {
+    font-size: 28px;
+    font-weight: 800;
+    background: linear-gradient(135deg, #667eea, #764ba2);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    margin-bottom: 8px;
+  }
+ .header p { opacity: 0.7; font-size: 14px; }
+
+ .toolbar {
+    display: flex;
+    gap: 12px;
+    flex-wrap: wrap;
+    margin-bottom: 20px;
+  }
+ .busca {
+    flex: 1;
+    min-width: 250px;
+    position: relative;
+  }
+ .busca input {
+    width: 100%;
+    padding: 12px 16px 12px 44px;
+    border: 1px solid #e2e8f0;
+    border-radius: 12px;
+    font-size: 14px;
+    outline: none;
+    transition: all 0.2s;
+  }
+ .busca input:focus { border-color: #667eea; box-shadow: 0 0 0 3px rgba(102,126,234,0.1); }
+ .busca i { position: absolute; left: 16px; top: 50%; transform: translateY(-50%); color: #94a3b8; }
+
+ .filtros select {
+    padding: 12px 16px;
+    border: 1px solid #e2e8f0;
+    border-radius: 12px;
+    font-size: 14px;
+    cursor: pointer;
+    background: white;
+  }
+
+ .btn {
+    padding: 12px 20px;
+    border: none;
+    border-radius: 12px;
+    font-weight: 600;
+    cursor: pointer;
+    font-size: 14px;
+    transition: all 0.2s;
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+  }
+ .btn-primary {
+    background: linear-gradient(135deg, #667eea, #764ba2);
+    color: white;
+    box-shadow: 0 4px 12px rgba(102,126,234,0.3);
+  }
+ .btn-primary:hover { transform: translateY(-2px); box-shadow: 0 6px 20px rgba(102,126,234,0.4); }
+ .btn-ghost {
+    background: white;
+    color: #475569;
+    border: 1px solid #e2e8f0;
+  }
+ .btn-ghost:hover { background: #f8fafc; }
+
+ .stats {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    gap: 16px;
+    margin-bottom: 24px;
+  }
+ .stat-card {
+    background: white;
+    padding: 20px;
+    border-radius: 16px;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.08);
+  }
+ .stat-label { font-size: 12px; text-transform: uppercase; letter-spacing: 1px; opacity: 0.6; margin-bottom: 8px; }
+ .stat-value { font-size: 28px; font-weight: 700; color: #1a1b26; }
+ .stat-value.pago { color: #10b981; }
+ .stat-value.aberto { color: #f59e0b; }
+ .stat-value.atraso { color: #ef4444; }
+
+ .table-wrapper {
+    background: white;
+    border-radius: 20px;
+    overflow: hidden;
+    box-shadow: 0 8px 32px rgba(0,0,0,0.12);
+  }
+  table {
+    width: 100%;
+    border-collapse: collapse;
+  }
+  thead {
+    background: linear-gradient(135deg, #667eea, #764ba2);
+    color: white;
+  }
+  th {
+    padding: 16px;
+    text-align: left;
+    font-weight: 600;
+    font-size: 13px;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    white-space: nowrap;
+  }
+  td {
+    padding: 14px 16px;
+    border-bottom: 1px solid #f1f5f9;
+    font-size: 14px;
+  }
+  tbody tr:hover { background: #f8fafc; }
+  tbody tr:last-child td { border-bottom: none; }
+
+ .badge {
+    padding: 4px 10px;
+    border-radius: 8px;
+    font-size: 12px;
+    font-weight: 600;
+    display: inline-block;
+  }
+ .badge.pago { background: rgba(16,185,129,0.15); color: #059669; }
+ .badge.aberto { background: rgba(245,158,11,0.15); color: #d97706; }
+ .badge.aguardando { background: rgba(59,130,246,0.15); color: #2563eb; }
+ .badge.mensal { background: rgba(102,126,234,0.15); color: #667eea; }
+
+ .atraso {
+    font-weight: 700;
+  }
+ .atraso.ok { color: #10b981; }
+ .atraso.alerta { color: #f59e0b; }
+ .atraso.perigo { color: #ef4444; }
+
+  select.status-select {
+    padding: 6px 10px;
+    border-radius: 8px;
+    border: 1px solid #e2e8f0;
+    font-size: 13px;
+    cursor: pointer;
+  }
+
+  input[type="checkbox"] {
+    width: 18px;
+    height: 18px;
+    cursor: pointer;
+  }
+
+ .empty {
+    text-align: center;
+    padding: 60px 20px;
+    opacity: 0.5;
+  }
+ .empty i { font-size: 48px; margin-bottom: 16px; }
+
+  @media (max-width: 768px) {
+   .table-wrapper { overflow-x: auto; }
+    table { min-width: 800px; }
+   .toolbar { flex-direction: column; }
+   .busca { width: 100%; }
+  }
+</style>
+</head>
+<body>
+<div class="container">
+  <div class="header">
+    <h1><i class="fas fa-file-invoice-dollar"></i> Contas a Pagar - BROS</h1>
+    <p>Controle de contas mensal. Dados salvos automaticamente no seu navegador.</p>
+  </div>
+
+  <div class="stats" id="stats"></div>
+
+  <div class="toolbar">
+    <div class="busca">
+      <i class="fas fa-search"></i>
+      <input type="text" id="busca" placeholder="Buscar conta...">
+    </div>
+    <div class="filtros">
+      <select id="filtroStatus">
+        <option value="todos">Todos Status</option>
+        <option value="Paga">Paga</option>
+        <option value="Em Aberto">Em Aberto</option>
+        <option value="Aguardando NF">Aguardando NF</option>
+      </select>
+    </div>
+    <button class="btn btn-primary" onclick="adicionarConta()"><i class="fas fa-plus"></i> Nova Conta</button>
+    <button class="btn btn-ghost" onclick="exportarCSV()"><i class="fas fa-download"></i> Exportar CSV</button>
+    <button class="btn btn-ghost" onclick="importarCSV()"><i class="fas fa-upload"></i> Importar CSV</button>
+    <input type="file" id="inputCSV" accept=".csv" style="display:none" onchange="lerCSV(event)">
+  </div>
+
+  <div class="table-wrapper">
+    <table id="tabela">
+      <thead>
+        <tr>
+          <th>Conta</th>
+          <th>Valor</th>
+          <th>Tipo</th>
+          <th>Status</th>
+          <th>Atraso</th>
+          <th>Vencimento</th>
+          <th>Docs</th>
+          <th>NF</th>
+          <th>Tít.</th>
+          <th>Prot.</th>
+          <th>Anex.</th>
+          <th>Pr.Anex</th>
+          <th>tt.</th>
+          <th>Baix.T</th>
+          <th>Ações</th>
+        </tr>
+      </thead>
+      <tbody id="tbody"></tbody>
+    </table>
+  </div>
+</div>
+
+<script>
+let contas = JSON.parse(localStorage.getItem('contasBROS') || 'null') || [
+  {id:1, conta:'CPA BROS BRUNA CENOSKI LIMPEZA LOJA INACIO MARTINS ABRIL 2026', valor:720, tipo:'MENSAL', status:'Paga', vencimento:'2026-04-06', docs:false, nf:false, titu:false, prot:false, anex:false, pranex:false, tt:false, baxt:false},
+  {id:2, conta:'POSTO NELSON PERUSSOLO INACIO', valor:0, tipo:'MENSAL', status:'Em Aberto', vencimento:'2026-04-06', docs:false, nf:false, titu:false, prot:false, anex:false, pranex:false, tt:false, baxt:false},
+  {id:3, conta:'SAMUEL GRETSKI', valor:0, tipo:'MENSAL', status:'Aguardando NF', vencimento:'2026-04-06', docs:false, nf:false, titu:false, prot:false, anex:false, pranex:false, tt:false, baxt:false},
+  {id:4, conta:'CLAUDIO RAUCK', valor:0, tipo:'MENSAL', status:'', vencimento:'2026-04-06', docs:false, nf:false, titu:false, prot:false, anex:false, pranex:false, tt:false, baxt:false},
+  {id:5, conta:'POSTO SÃO MATEUS', valor:0, tipo:'MENSAL', status:'', vencimento:'2026-06-10', docs:false, nf:false, titu:false, prot:false, anex:false, pranex:false, tt:false, baxt:false}
+];
+
+function calcularAtraso(vencimento) {
+  if(!vencimento) return {dias:0, classe:'ok'};
+  const hoje = new Date();
+  hoje.setHours(0,0,0,0);
+  const venc = new Date(vencimento);
+  venc.setHours(0,0,0,0);
+  const diff = Math.floor((hoje - venc) / (1000*60*60*24));
+  if(diff <= 0) return {dias:'OK', classe:'ok'};
+  if(diff <= 7) return {dias:diff, classe:'alerta'};
+  return {dias:diff, classe:'perigo'};
+}
+
+function formatarValor(v) {
+  if(!v || v==0) return '-';
+  return 'R$ ' + v.toLocaleString('pt-BR', {minimumFractionDigits:2});
+}
+
+function formatarData(d) {
+  if(!d) return '-';
+  return new Date(d + 'T00:00:00').toLocaleDateString('pt-BR');
+}
+
+function salvar() {
+  localStorage.setItem('contasBROS', JSON.stringify(contas));
+  renderizar();
+}
+
+function renderizar() {
+  const busca = document.getElementById('busca').value.toLowerCase();
+  const filtroStatus = document.getElementById('filtroStatus').value;
+
+  let filtradas = contas.filter(c => {
+    const matchBusca = c.conta.toLowerCase().includes(busca);
+    const matchStatus = filtroStatus === 'todos' || c.status === filtroStatus;
+    return matchBusca && matchStatus;
+  });
+
+  const tbody = document.getElementById('tbody');
+  if(filtradas.length === 0) {
+    tbody.innerHTML = `<tr><td colspan="15"><div class="empty"><i class="fas fa-inbox"></i><p>Nenhuma conta encontrada</p></div></td></tr>`;
+  } else {
+    tbody.innerHTML = filtradas.map(c => {
+      const atraso = calcularAtraso(c.vencimento);
+      const statusBadge = c.status === 'Paga'? 'pago' : c.status === 'Em Aberto'? 'aberto' : c.status === 'Aguardando NF'? 'aguardando' : '';
+
+      return `<tr>
+        <td><strong>${c.conta}</strong></td>
+        <td>${formatarValor(c.valor)}</td>
+        <td><span class="badge mensal">${c.tipo}</span></td>
+        <td>
+          <select class="status-select" onchange="mudarStatus(${c.id}, this.value)">
+            <option value="">-</option>
+            <option value="Paga" ${c.status==='Paga'?'selected':''}>Paga</option>
+            <option value="Em Aberto" ${c.status==='Em Aberto'?'selected':''}>Em Aberto</option>
+            <option value="Aguardando NF" ${c.status==='Aguardando NF'?'selected':''}>Aguardando NF</option>
+          </select>
+        </td>
+        <td class="atraso ${atraso.classe}">${atraso.dias}</td>
+        <td>${formatarData(c.vencimento)}</td>
+        ${['docs','nf','titu','prot','anex','pranex','tt','baxt'].map(k =>
+          `<td><input type="checkbox" ${c[k]?'checked':''} onchange="toggleCheck(${c.id}, '${k}', this.checked)"></td>`
+        ).join('')}
+        <td><button onclick="excluirConta(${c.id})" style="background:none;border:none;color:#ef4444;cursor:pointer;"><i class="fas fa-trash"></i></button></td>
+      </tr>`;
+    }).join('');
+  }
+
+  // Stats
+  const total = contas.length;
+  const pagas = contas.filter(c => c.status === 'Paga').length;
+  const abertas = contas.filter(c => c.status === 'Em Aberto').length;
+  const valorTotal = contas.reduce((acc, c) => acc + (c.valor || 0), 0);
+  const valorPagas = contas.filter(c => c.status === 'Paga').reduce((acc, c) => acc + (c.valor || 0), 0);
+
+  document.getElementById('stats').innerHTML = `
+    <div class="stat-card">
+      <div class="stat-label">Total de Contas</div>
+      <div class="stat-value">${total}</div>
+    </div>
+    <div class="stat-card">
+      <div class="stat-label">Pagas</div>
+      <div class="stat-value pago">${pagas}</div>
+    </div>
+    <div class="stat-card">
+      <div class="stat-label">Em Aberto</div>
+      <div class="stat-value aberto">${abertas}</div>
+    </div>
+    <div class="stat-card">
+      <div class="stat-label">Valor Total</div>
+      <div class="stat-value">${formatarValor(valorTotal)}</div>
+    </div>
+  `;
+}
+
+function adicionarConta() {
+  const conta = prompt('Nome da conta:');
+  if(!conta) return;
+  const valor = parseFloat(prompt('Valor R$:') || 0);
+  const vencimento = prompt('Data vencimento AAAA-MM-DD:');
+  contas.push({
+    id: crypto.randomUUID(),
+    conta, valor, tipo:'MENSAL', status:'', vencimento,
+    docs:false, nf:false, titu:false, prot:false, anex:false, pranex:false, tt:false, baxt:false
+  });
+  salvar();
+}
+
+function excluirConta(id) {
+  if(confirm('Excluir esta conta?')) {
+    contas = contas.filter(c => c.id!== id);
+    salvar();
+  }
+}
+
+function mudarStatus(id, status) {
+  const c = contas.find(x => x.id === id);
+  if(c) { c.status = status; salvar(); }
+}
+
+function toggleCheck(id, campo, valor) {
+  const c = contas.find(x => x.id === id);
+  if(c) { c[campo] = valor; salvar(); }
+}
+
+function exportarCSV() {
+  const headers = ['Conta','Valor','Tipo','Status','Vencimento','Docs','NF','Titu','Prot','Anex','PrAnex','tt','BaixT'];
+  const linhas = contas.map(c => [
+    c.conta, c.valor, c.tipo, c.status, c.vencimento,
+    c.docs, c.nf, c.titu, c.prot, c.anex, c.pranex, c.tt, c.baxt
+  ].join(','));
+
+  const csv = [headers.join(','),...linhas].join('\n');
+  const blob = new Blob([csv], {type: 'text/csv'});
+  const a = document.createElement('a');
+  a.href = URL.createObjectURL(blob);
+  a.download = 'contas-pagar-bros.csv';
+  a.click();
+}
+
+function importarCSV() {
+  document.getElementById('inputCSV').click();
+}
+
+function lerCSV(e) {
+  const file = e.target.files[0];
+  if(!file) return;
+  const reader = new FileReader();
+  reader.onload = ev => {
+    const linhas = ev.target.result.split('\n').slice(1);
+    contas = linhas.filter(l => l.trim()).map((l, i) => {
+      const [conta, valor, tipo, status, vencimento,...checks] = l.split(',');
+      return {
+        id: crypto.randomUUID(),
+        conta, valor: parseFloat(valor)||0, tipo, status, vencimento,
+        docs: checks[0]==='true', nf: checks[1]==='true', titu: checks[2]==='true',
+        prot: checks[3]==='true', anex: checks[4]==='true', pranex: checks[5]==='true',
+        tt: checks[6]==='true', baxt: checks[7]==='true'
+      };
+    });
+    salvar();
+    alert('✅ CSV importado!');
+  };
+  reader.readAsText(file);
+}
+
+document.getElementById('busca').oninput = renderizar;
+document.getElementById('filtroStatus').onchange = renderizar;
+
+renderizar();
+</script>
+</body>
+</html>
