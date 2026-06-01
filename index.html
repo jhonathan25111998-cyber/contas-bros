@@ -90,15 +90,6 @@
 .busca input:focus { border-color: #667eea; box-shadow: 0 0 0 3px rgba(102,126,234,0.1); }
 .busca i { position: absolute; left: 16px; top: 50%; transform: translateY(-50%); color: #94a3b8; }
 
-.filtros select {
-    padding: 12px 16px;
-    border: 1px solid #e2e8f0;
-    border-radius: 12px;
-    font-size: 14px;
-    cursor: pointer;
-    background: white;
-  }
-
 .btn {
     padding: 12px 20px;
     border: none;
@@ -116,13 +107,18 @@
     color: white;
     box-shadow: 0 4px 12px rgba(102,126,234,0.3);
   }
-.btn-primary:hover { transform: translateY(-2px); box-shadow: 0 6px 20px rgba(102,126,234,0.4); }
+.btn-primary:hover { transform: translateY(-2px); }
 .btn-ghost {
     background: white;
     color: #475569;
     border: 1px solid #e2e8f0;
   }
 .btn-ghost:hover { background: #f8fafc; }
+.btn-danger {
+    background: #ef4444;
+    color: white;
+  }
+.btn-danger:hover { background: #dc2626; }
 
 .stats {
     display: grid;
@@ -140,7 +136,6 @@
 .stat-value { font-size: 28px; font-weight: 700; color: #1a1b26; }
 .stat-value.pago { color: #10b981; }
 .stat-value.aberto { color: #f59e0b; }
-.stat-value.atraso { color: #ef4444; }
 
 .table-wrapper {
     background: white;
@@ -171,7 +166,6 @@
     font-size: 14px;
   }
   tbody tr:hover { background: #f8fafc; }
-  tbody tr:last-child td { border-bottom: none; }
 
 .badge {
     padding: 4px 10px;
@@ -182,28 +176,17 @@
   }
 .badge.pago { background: rgba(16,185,129,0.15); color: #059669; }
 .badge.aberto { background: rgba(245,158,11,0.15); color: #d97706; }
-.badge.aguardando { background: rgba(59,130,246,0.15); color: #2563eb; }
 .badge.mensal { background: rgba(102,126,234,0.15); color: #667eea; }
-.badge.recorrente { background: rgba(168,85,247,0.15); color: #a855f7; }
 
-.atraso {
-    font-weight: 700;
-  }
-.atraso.ok { color: #10b981; }
-.atraso.alerta { color: #f59e0b; }
-.atraso.perigo { color: #ef4444; }
+.atraso.ok { color: #10b981; font-weight: 700; }
+.atraso.alerta { color: #f59e0b; font-weight: 700; }
+.atraso.perigo { color: #ef4444; font-weight: 700; }
 
   select.status-select {
     padding: 6px 10px;
     border-radius: 8px;
     border: 1px solid #e2e8f0;
     font-size: 13px;
-    cursor: pointer;
-  }
-
-  input[type="checkbox"] {
-    width: 18px;
-    height: 18px;
     cursor: pointer;
   }
 
@@ -215,10 +198,20 @@
     border-radius: 6px;
     font-size: 13px;
     outline: none;
-    font-family: 'Poppins', sans-serif;
   }
-  input.edit-input:focus { border-color: #667eea; box-shadow: 0 0 0 2px rgba(102,126,234,0.1); }
+  input.edit-input:focus { border-color: #667eea; }
   input.protocolo-input { min-width: 110px; max-width: 140px; }
+
+.btn-acao {
+    background: none;
+    border: none;
+    cursor: pointer;
+    padding: 6px;
+    border-radius: 6px;
+    transition: all 0.2s;
+  }
+.btn-acao:hover { background: #fee2e2; }
+.btn-acao i { color: #ef4444; }
 
 .empty {
     text-align: center;
@@ -229,9 +222,8 @@
 
   @media (max-width: 768px) {
 .table-wrapper { overflow-x: auto; }
-    table { min-width: 1050px; }
+    table { min-width: 1100px; }
 .toolbar { flex-direction: column; }
-.busca { width: 100%; }
   }
 </style>
 </head>
@@ -239,7 +231,7 @@
 <div class="container">
   <div class="header">
     <h1><i class="fas fa-file-invoice-dollar"></i> Contas a Pagar - BROS</h1>
-    <p>Contas do mês vigente. Use as setas pra navegar entre meses. Recorrência gera parcelas automático.</p>
+    <p>Navegue pelos meses, edite direto na tabela. Dados salvos no navegador.</p>
   </div>
 
   <div class="mes-navegador">
@@ -255,23 +247,21 @@
       <i class="fas fa-search"></i>
       <input type="text" id="busca" placeholder="Buscar conta...">
     </div>
-    <div class="filtros">
-      <select id="filtroStatus">
-        <option value="todos">Todos Status</option>
-        <option value="Paga">Paga</option>
-        <option value="Em Aberto">Em Aberto</option>
-        <option value="Aguardando NF">Aguardando NF</option>
-      </select>
-    </div>
+    <select id="filtroStatus" style="padding:12px 16px;border:1px solid #e2e8f0;border-radius:12px;">
+      <option value="todos">Todos Status</option>
+      <option value="Paga">Paga</option>
+      <option value="Em Aberto">Em Aberto</option>
+      <option value="Aguardando NF">Aguardando NF</option>
+    </select>
     <button class="btn btn-primary" onclick="adicionarConta()"><i class="fas fa-plus"></i> Nova Conta</button>
     <button class="btn btn-ghost" onclick="gerarRecorrencias()"><i class="fas fa-sync"></i> Gerar Mês Seguinte</button>
-    <button class="btn btn-ghost" onclick="exportarCSV()"><i class="fas fa-download"></i> Exportar CSV</button>
-    <button class="btn btn-ghost" onclick="importarCSV()"><i class="fas fa-upload"></i> Importar CSV</button>
-    <input type="file" id="inputCSV" accept=".csv" style="display:none" onchange="lerCSV(event)">
+    <button class="btn btn-ghost" onclick="duplicarMes()"><i class="fas fa-copy"></i> Duplicar Mês</button>
+    <button class="btn btn-ghost" onclick="exportarCSV()"><i class="fas fa-download"></i> Exportar</button>
+    <button class="btn btn-ghost" onclick="limparDados()"><i class="fas fa-broom"></i> Limpar Tudo</button>
   </div>
 
   <div class="table-wrapper">
-    <table id="tabela">
+    <table>
       <thead>
         <tr>
           <th>Conta</th>
@@ -300,12 +290,9 @@
 
 <script>
 let mesAtual = new Date();
-mesAtual.setDate(1); // Força dia 1 pra evitar bug de 31->30
+mesAtual.setDate(1);
 
-let contas = JSON.parse(localStorage.getItem('contasBROS') || 'null') || [
-  {id:crypto.randomUUID(), conta:'CPA BROS BRUNA CENOSKI LIMPEZA', protocolo:'', valor:720, tipo:'MENSAL', recorrencia:'mensal', status:'Paga', vencimento:'2026-04-06', docs:false, nf:false, titu:false, prot:false, anex:false, pranex:false, tt:false, baxt:false, parentId:null},
-  {id:crypto.randomUUID(), conta:'POSTO NELSON PERUSSOLO', protocolo:'', valor:0, tipo:'MENSAL', recorrencia:'', status:'Em Aberto', vencimento:'2026-04-06', docs:false, nf:false, titu:false, prot:false, anex:false, pranex:false, tt:false, baxt:false, parentId:null}
-];
+let contas = JSON.parse(localStorage.getItem('contasBROS') || 'null') || [];
 
 const meses = ['Janeiro','Fevereiro','Março','Abril','Maio','Junho','Julho','Agosto','Setembro','Outubro','Novembro','Dezembro'];
 
@@ -314,7 +301,7 @@ function chaveMes(data) {
 }
 
 function calcularAtraso(vencimento) {
-  if(!vencimento) return {dias:0, classe:'ok'};
+  if(!vencimento) return {dias:'-', classe:'ok'};
   const hoje = new Date();
   hoje.setHours(0,0,0,0);
   const venc = new Date(vencimento);
@@ -362,24 +349,24 @@ function renderizar() {
 
   const tbody = document.getElementById('tbody');
   if(filtradas.length === 0) {
-    tbody.innerHTML = `<tr><td colspan="17"><div class="empty"><i class="fas fa-calendar-check"></i><p>Nenhuma conta neste mês</p></div></td></tr>`;
+    tbody.innerHTML = `<tr><td colspan="17"><div class="empty"><i class="fas fa-calendar-check"></i><p>Nenhuma conta neste mês. Clique em "Nova Conta" ou "Duplicar Mês".</p></div></td></tr>`;
   } else {
     tbody.innerHTML = filtradas.map(c => {
       const atraso = calcularAtraso(c.vencimento);
 
       return `<tr>
-        <td><input type="text" class="edit-input" value="${c.conta}" onchange="mudarConta('${c.id}', this.value)"></td>
-        <td><input type="text" class="edit-input protocolo-input" value="${c.protocolo || ''}" placeholder="Nº" onchange="mudarProtocolo('${c.id}', this.value)"></td>
-        <td>${formatarValor(c.valor)}</td>
+        <td><input type="text" class="edit-input" value="${c.conta}" onchange="mudarCampo('${c.id}', 'conta', this.value)"></td>
+        <td><input type="text" class="edit-input protocolo-input" value="${c.protocolo || ''}" placeholder="Nº" onchange="mudarCampo('${c.id}', 'protocolo', this.value)"></td>
+        <td><input type="number" class="edit-input" style="min-width:100px" value="${c.valor || 0}" onchange="mudarCampo('${c.id}', 'valor', parseFloat(this.value)||0)"></td>
         <td><span class="badge mensal">${c.tipo}</span></td>
         <td>
-          <select class="status-select" onchange="mudarRecorrencia('${c.id}', this.value)">
+          <select class="status-select" onchange="mudarCampo('${c.id}', 'recorrencia', this.value)">
             <option value="" ${c.recorrencia===''?'selected':''}>Única</option>
             <option value="mensal" ${c.recorrencia==='mensal'?'selected':''}>Mensal</option>
           </select>
         </td>
         <td>
-          <select class="status-select" onchange="mudarStatus('${c.id}', this.value)">
+          <select class="status-select" onchange="mudarCampo('${c.id}', 'status', this.value)">
             <option value="">-</option>
             <option value="Paga" ${c.status==='Paga'?'selected':''}>Paga</option>
             <option value="Em Aberto" ${c.status==='Em Aberto'?'selected':''}>Em Aberto</option>
@@ -387,14 +374,11 @@ function renderizar() {
           </select>
         </td>
         <td class="atraso ${atraso.classe}">${atraso.dias}</td>
-        <td>${formatarData(c.vencimento)}</td>
-        ${['docs','nf','titu','prot','anex','pranex'].map(k =>
-          `<td><input type="checkbox" ${c[k]?'checked':''} onchange="toggleCheck('${c.id}', '${k}', this.checked)"></td>`
+        <td><input type="date" class="edit-input" value="${c.vencimento}" onchange="mudarCampo('${c.id}', 'vencimento', this.value)"></td>
+        ${['docs','nf','titu','prot','anex','pranex','tt','baxt'].map(k =>
+          `<td><input type="checkbox" ${c[k]?'checked':''} onchange="mudarCampo('${c.id}', '${k}', this.checked)"></td>`
         ).join('')}
-        ${['tt','baxt'].map(k =>
-          `<td><input type="checkbox" ${c[k]?'checked':''} onchange="toggleCheck('${c.id}', '${k}', this.checked)"></td>`
-        ).join('')}
-        <td><button onclick="excluirConta('${c.id}')" style="background:none;border:none;color:#ef4444;cursor:pointer;"><i class="fas fa-trash"></i></button></td>
+        <td><button class="btn-acao" onclick="excluirConta('${c.id}')" title="Excluir conta"><i class="fas fa-trash"></i></button></td>
       </tr>`;
     }).join('');
   }
@@ -444,33 +428,13 @@ function adicionarConta() {
 }
 
 function excluirConta(id) {
-  if(confirm('Excluir esta conta?')) {
+  if(confirm('Excluir esta conta permanentemente?')) {
     contas = contas.filter(c => c.id!== id);
     salvar();
   }
 }
 
-function mudarConta(id, valor) {
-  const c = contas.find(x => x.id === id);
-  if(c) { c.conta = valor; salvar(); }
-}
-
-function mudarProtocolo(id, valor) {
-  const c = contas.find(x => x.id === id);
-  if(c) { c.protocolo = valor; salvar(); }
-}
-
-function mudarStatus(id, status) {
-  const c = contas.find(x => x.id === id);
-  if(c) { c.status = status; salvar(); }
-}
-
-function mudarRecorrencia(id, valor) {
-  const c = contas.find(x => x.id === id);
-  if(c) { c.recorrencia = valor; salvar(); }
-}
-
-function toggleCheck(id, campo, valor) {
+function mudarCampo(id, campo, valor) {
   const c = contas.find(x => x.id === id);
   if(c) { c[campo] = valor; salvar(); }
 }
@@ -494,7 +458,7 @@ function gerarRecorrencias() {
       const novaVenc = `${novaData.getFullYear()}-${String(novaData.getMonth()+1).padStart(2,'0')}-${String(novaData.getDate()).padStart(2,'0')}`;
 
       contas.push({
-       ...c,
+      ...c,
         id: crypto.randomUUID(),
         vencimento: novaVenc,
         status: '',
@@ -506,54 +470,65 @@ function gerarRecorrencias() {
     }
   });
 
-  if(criadas > 0) {
-    alert(`✅ ${criadas} conta(s) recorrente(s) gerada(s) para ${meses[proximoMes.getMonth()]}`);
-    salvar();
-  } else {
-    alert('Nenhuma recorrência nova pra gerar neste mês');
-  }
+  alert(criadas > 0? `✅ ${criadas} conta(s) gerada(s) para ${meses[proximoMes.getMonth()]}` : 'Nada pra gerar');
+  salvar();
+}
+
+function duplicarMes() {
+  const proximoMes = new Date(mesAtual);
+  proximoMes.setMonth(proximoMes.getMonth() + 1);
+  const chaveProximo = chaveMes(proximoMes);
+
+  const doMes = contas.filter(c => chaveMes(new Date(c.vencimento + 'T00:00:00')) === chaveMes(mesAtual));
+  let criadas = 0;
+
+  doMes.forEach(c => {
+    const jaExiste = contas.some(x =>
+      x.conta === c.conta && chaveMes(new Date(x.vencimento + 'T00:00:00')) === chaveProximo
+    );
+    if(!jaExiste) {
+      const novaData = new Date(c.vencimento);
+      novaData.setMonth(novaData.getMonth() + 1);
+      const novaVenc = `${novaData.getFullYear()}-${String(novaData.getMonth()+1).padStart(2,'0')}-${String(novaData.getDate()).padStart(2,'0')}`;
+
+      contas.push({
+      ...c,
+        id: crypto.randomUUID(),
+        vencimento: novaVenc,
+        status: '',
+        protocolo: '',
+        docs:false, nf:false, titu:false, prot:false, anex:false, pranex:false, tt:false, baxt:false,
+        parentId: null
+      });
+      criadas++;
+    }
+  });
+
+  alert(`✅ ${criadas} conta(s) duplicada(s) para ${meses[proximoMes.getMonth()]}`);
+  salvar();
 }
 
 function exportarCSV() {
-  const headers = ['Conta','Protocolo','Valor','Tipo','Recorrencia','Status','Vencimento','Docs','NF','Titu','Prot','Anex','PrAnex','tt','BaixT','ParentId'];
+  const headers = ['Conta','Protocolo','Valor','Tipo','Recorrencia','Status','Vencimento','Docs','NF','Titu','Prot','Anex','PrAnex','tt','BaixT'];
   const linhas = contas.map(c => [
     `"${c.conta}"`, `"${c.protocolo || ''}"`, c.valor, c.tipo, c.recorrencia, c.status, c.vencimento,
-    c.docs, c.nf, c.titu, c.prot, c.anex, c.pranex, c.tt, c.baxt, c.parentId || ''
+    c.docs, c.nf, c.titu, c.prot, c.anex, c.pranex, c.tt, c.baxt
   ].join(','));
 
   const csv = [headers.join(','),...linhas].join('\n');
   const blob = new Blob([csv], {type: 'text/csv;charset=utf-8;'});
   const a = document.createElement('a');
   a.href = URL.createObjectURL(blob);
-  a.download = 'contas-pagar-bros.csv';
+  a.download = `contas-${chaveMes(mesAtual)}.csv`;
   a.click();
 }
 
-function importarCSV() {
-  document.getElementById('inputCSV').click();
-}
-
-function lerCSV(e) {
-  const file = e.target.files[0];
-  if(!file) return;
-  const reader = new FileReader();
-  reader.onload = ev => {
-    const linhas = ev.target.result.split('\n').slice(1);
-    contas = linhas.filter(l => l.trim()).map((l) => {
-      const partes = l.match(/(".*?"|[^",]+)(?=\s*,|\s*$)/g) || [];
-      const [conta, protocolo, valor, tipo, recorrencia, status, vencimento, docs, nf, titu, prot, anex, pranex, tt, baxt, parentId] = partes.map(p => p.replace(/"/g, '').trim());
-      return {
-        id: crypto.randomUUID(),
-        conta, protocolo: protocolo || '', valor: parseFloat(valor)||0, tipo, recorrencia: recorrencia||'', status, vencimento,
-        docs: docs==='true', nf: nf==='true', titu: titu==='true',
-        prot: prot==='true', anex: anex==='true', pranex: pranex==='true',
-        tt: tt==='true', baxt: baxt==='true', parentId: parentId||null
-      };
-    });
-    salvar();
-    alert('✅ CSV importado!');
-  };
-  reader.readAsText(file, 'UTF-8');
+function limparDados() {
+  if(confirm('APAGAR TODAS AS CONTAS? Isso não tem volta.')) {
+    contas = [];
+    localStorage.removeItem('contasBROS');
+    renderizar();
+  }
 }
 
 document.getElementById('busca').oninput = renderizar;
