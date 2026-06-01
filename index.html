@@ -176,15 +176,18 @@
     cursor: pointer;
   }
 
-  input.protocolo-input {
-    width: 110px;
+  input.edit-input {
+    width: 100%;
+    min-width: 200px;
     padding: 6px 8px;
     border: 1px solid #e2e8f0;
     border-radius: 6px;
     font-size: 13px;
     outline: none;
+    font-family: 'Poppins', sans-serif;
   }
-  input.protocolo-input:focus { border-color: #667eea; }
+  input.edit-input:focus { border-color: #667eea; box-shadow: 0 0 0 2px rgba(102,126,234,0.1); }
+  input.protocolo-input { min-width: 110px; max-width: 140px; }
 
 .empty {
     text-align: center;
@@ -194,10 +197,10 @@
 .empty i { font-size: 48px; margin-bottom: 16px; }
 
   @media (max-width: 768px) {
-  .table-wrapper { overflow-x: auto; }
-    table { min-width: 950px; }
-  .toolbar { flex-direction: column; }
-  .busca { width: 100%; }
+ .table-wrapper { overflow-x: auto; }
+    table { min-width: 1000px; }
+ .toolbar { flex-direction: column; }
+ .busca { width: 100%; }
   }
 </style>
 </head>
@@ -205,7 +208,7 @@
 <div class="container">
   <div class="header">
     <h1><i class="fas fa-file-invoice-dollar"></i> Contas a Pagar - BROS</h1>
-    <p>Controle de contas mensal. Dados salvos automaticamente no seu navegador.</p>
+    <p>Controle de contas mensal. Clique nos campos para editar. Dados salvos automaticamente.</p>
   </div>
 
   <div class="stats" id="stats"></div>
@@ -234,6 +237,7 @@
       <thead>
         <tr>
           <th>Conta</th>
+          <th>Protocolo</th>
           <th>Valor</th>
           <th>Tipo</th>
           <th>Status</th>
@@ -245,7 +249,6 @@
           <th>Prot.</th>
           <th>Anex.</th>
           <th>Pr.Anex</th>
-          <th>Protocolo</th>
           <th>tt.</th>
           <th>Baix.T</th>
           <th>Ações</th>
@@ -258,11 +261,11 @@
 
 <script>
 let contas = JSON.parse(localStorage.getItem('contasBROS') || 'null') || [
-  {id:1, conta:'CPA BROS BRUNA CENOSKI LIMPEZA LOJA INACIO MARTINS ABRIL 2026', valor:720, tipo:'MENSAL', status:'Paga', vencimento:'2026-04-06', docs:false, nf:false, titu:false, prot:false, anex:false, pranex:false, protocolo:'', tt:false, baxt:false},
-  {id:2, conta:'POSTO NELSON PERUSSOLO INACIO', valor:0, tipo:'MENSAL', status:'Em Aberto', vencimento:'2026-04-06', docs:false, nf:false, titu:false, prot:false, anex:false, pranex:false, protocolo:'', tt:false, baxt:false},
-  {id:3, conta:'SAMUEL GRETSKI', valor:0, tipo:'MENSAL', status:'Aguardando NF', vencimento:'2026-04-06', docs:false, nf:false, titu:false, prot:false, anex:false, pranex:false, protocolo:'', tt:false, baxt:false},
-  {id:4, conta:'CLAUDIO RAUCK', valor:0, tipo:'MENSAL', status:'', vencimento:'2026-04-06', docs:false, nf:false, titu:false, prot:false, anex:false, pranex:false, protocolo:'', tt:false, baxt:false},
-  {id:5, conta:'POSTO SÃO MATEUS', valor:0, tipo:'MENSAL', status:'', vencimento:'2026-06-10', docs:false, nf:false, titu:false, prot:false, anex:false, pranex:false, protocolo:'', tt:false, baxt:false}
+  {id:1, conta:'CPA BROS BRUNA CENOSKI LIMPEZA LOJA INACIO MARTINS ABRIL 2026', protocolo:'', valor:720, tipo:'MENSAL', status:'Paga', vencimento:'2026-04-06', docs:false, nf:false, titu:false, prot:false, anex:false, pranex:false, tt:false, baxt:false},
+  {id:2, conta:'POSTO NELSON PERUSSOLO INACIO', protocolo:'', valor:0, tipo:'MENSAL', status:'Em Aberto', vencimento:'2026-04-06', docs:false, nf:false, titu:false, prot:false, anex:false, pranex:false, tt:false, baxt:false},
+  {id:3, conta:'SAMUEL GRETSKI', protocolo:'', valor:0, tipo:'MENSAL', status:'Aguardando NF', vencimento:'2026-04-06', docs:false, nf:false, titu:false, prot:false, anex:false, pranex:false, tt:false, baxt:false},
+  {id:4, conta:'CLAUDIO RAUCK', protocolo:'', valor:0, tipo:'MENSAL', status:'', vencimento:'2026-04-06', docs:false, nf:false, titu:false, prot:false, anex:false, pranex:false, tt:false, baxt:false},
+  {id:5, conta:'POSTO SÃO MATEUS', protocolo:'', valor:0, tipo:'MENSAL', status:'', vencimento:'2026-06-10', docs:false, nf:false, titu:false, prot:false, anex:false, pranex:false, tt:false, baxt:false}
 ];
 
 function calcularAtraso(vencimento) {
@@ -310,7 +313,8 @@ function renderizar() {
       const atraso = calcularAtraso(c.vencimento);
 
       return `<tr>
-        <td><strong>${c.conta}</strong></td>
+        <td><input type="text" class="edit-input" value="${c.conta}" onchange="mudarConta(${c.id}, this.value)"></td>
+        <td><input type="text" class="edit-input protocolo-input" value="${c.protocolo || ''}" placeholder="Nº" onchange="mudarProtocolo(${c.id}, this.value)"></td>
         <td>${formatarValor(c.valor)}</td>
         <td><span class="badge mensal">${c.tipo}</span></td>
         <td>
@@ -326,7 +330,6 @@ function renderizar() {
         ${['docs','nf','titu','prot','anex','pranex'].map(k =>
           `<td><input type="checkbox" ${c[k]?'checked':''} onchange="toggleCheck(${c.id}, '${k}', this.checked)"></td>`
         ).join('')}
-        <td><input type="text" class="protocolo-input" value="${c.protocolo || ''}" placeholder="Nº" onchange="mudarProtocolo(${c.id}, this.value)"></td>
         ${['tt','baxt'].map(k =>
           `<td><input type="checkbox" ${c[k]?'checked':''} onchange="toggleCheck(${c.id}, '${k}', this.checked)"></td>`
         ).join('')}
@@ -339,7 +342,6 @@ function renderizar() {
   const pagas = contas.filter(c => c.status === 'Paga').length;
   const abertas = contas.filter(c => c.status === 'Em Aberto').length;
   const valorTotal = contas.reduce((acc, c) => acc + (c.valor || 0), 0);
-  const valorPagas = contas.filter(c => c.status === 'Paga').reduce((acc, c) => acc + (c.valor || 0), 0);
 
   document.getElementById('stats').innerHTML = `
     <div class="stat-card">
@@ -366,10 +368,11 @@ function adicionarConta() {
   if(!conta) return;
   const valor = parseFloat(prompt('Valor R$:') || 0);
   const vencimento = prompt('Data vencimento AAAA-MM-DD:');
+  const protocolo = prompt('Nº Protocolo:') || '';
   contas.push({
     id: crypto.randomUUID(),
-    conta, valor, tipo:'MENSAL', status:'', vencimento,
-    docs:false, nf:false, titu:false, prot:false, anex:false, pranex:false, protocolo:'', tt:false, baxt:false
+    conta, protocolo, valor, tipo:'MENSAL', status:'', vencimento,
+    docs:false, nf:false, titu:false, prot:false, anex:false, pranex:false, tt:false, baxt:false
   });
   salvar();
 }
@@ -379,6 +382,11 @@ function excluirConta(id) {
     contas = contas.filter(c => c.id!== id);
     salvar();
   }
+}
+
+function mudarConta(id, valor) {
+  const c = contas.find(x => x.id === id);
+  if(c) { c.conta = valor; salvar(); }
 }
 
 function mudarStatus(id, status) {
@@ -397,10 +405,10 @@ function mudarProtocolo(id, valor) {
 }
 
 function exportarCSV() {
-  const headers = ['Conta','Valor','Tipo','Status','Vencimento','Docs','NF','Titu','Prot','Anex','PrAnex','Protocolo','tt','BaixT'];
+  const headers = ['Conta','Protocolo','Valor','Tipo','Status','Vencimento','Docs','NF','Titu','Prot','Anex','PrAnex','tt','BaixT'];
   const linhas = contas.map(c => [
-    `"${c.conta}"`, c.valor, c.tipo, c.status, c.vencimento,
-    c.docs, c.nf, c.titu, c.prot, c.anex, c.pranex, `"${c.protocolo || ''}"`, c.tt, c.baxt
+    `"${c.conta}"`, `"${c.protocolo || ''}"`, c.valor, c.tipo, c.status, c.vencimento,
+    c.docs, c.nf, c.titu, c.prot, c.anex, c.pranex, c.tt, c.baxt
   ].join(','));
 
   const csv = [headers.join(','),...linhas].join('\n');
@@ -423,13 +431,12 @@ function lerCSV(e) {
     const linhas = ev.target.result.split('\n').slice(1);
     contas = linhas.filter(l => l.trim()).map((l) => {
       const partes = l.match(/(".*?"|[^",]+)(?=\s*,|\s*$)/g) || [];
-      const [conta, valor, tipo, status, vencimento, docs, nf, titu, prot, anex, pranex, protocolo, tt, baxt] = partes.map(p => p.replace(/"/g, '').trim());
+      const [conta, protocolo, valor, tipo, status, vencimento, docs, nf, titu, prot, anex, pranex, tt, baxt] = partes.map(p => p.replace(/"/g, '').trim());
       return {
         id: crypto.randomUUID(),
-        conta, valor: parseFloat(valor)||0, tipo, status, vencimento,
+        conta, protocolo: protocolo || '', valor: parseFloat(valor)||0, tipo, status, vencimento,
         docs: docs==='true', nf: nf==='true', titu: titu==='true',
         prot: prot==='true', anex: anex==='true', pranex: pranex==='true',
-        protocolo: protocolo || '',
         tt: tt==='true', baxt: baxt==='true'
       };
     });
