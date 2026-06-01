@@ -9,54 +9,60 @@
 <style>
     * { margin: 0; padding: 0; box-sizing: border-box; }
   body { font-family: 'Poppins', sans-serif; background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); min-height: 100vh; padding: 24px; color: #1a1b26; }
-.container { max-width: 1500px; margin: 0 auto; }
-.header { background: rgba(255, 255, 255, 0.95); backdrop-filter: blur(20px); border-radius: 24px; padding: 32px; margin-bottom: 24px; box-shadow: 0 8px 32px rgba(0,0,0,0.12); }
-.header h1 { font-size: 28px; font-weight: 800; background: linear-gradient(135deg, #667eea, #764ba2); -webkit-background-clip: text; -webkit-text-fill-color: transparent; margin-bottom: 8px; }
-.mes-navegador { display: flex; align-items: center; gap: 16px; margin-bottom: 20px; background: white; padding: 16px 20px; border-radius: 16px; }
-.mes-navegador button { background: linear-gradient(135deg, #667eea, #764ba2); color: white; border: none; width: 40px; height: 40px; border-radius: 10px; cursor: pointer; font-size: 18px; }
-.mes-navegador h2 { flex: 1; text-align: center; font-size: 22px; font-weight: 700; }
-.toolbar { display: flex; gap: 12px; flex-wrap: wrap; margin-bottom: 20px; }
-.busca { flex: 1; min-width: 250px; position: relative; }
-.busca input { width: 100%; padding: 12px 16px 12px 44px; border: 1px solid #e2e8f0; border-radius: 12px; }
-.busca i { position: absolute; left: 16px; top: 50%; transform: translateY(-50%); color: #94a3b8; }
-.btn { padding: 12px 20px; border: none; border-radius: 12px; font-weight: 600; cursor: pointer; display: inline-flex; gap: 8px; }
-.btn-primary { background: linear-gradient(135deg, #667eea, #764ba2); color: white; }
-.btn-ghost { background: white; color: #475569; border: 1px solid #e2e8f0; }
-.stats { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 16px; margin-bottom: 24px; }
-.stat-card { background: white; padding: 20px; border-radius: 16px; }
-.stat-label { font-size: 12px; text-transform: uppercase; opacity: 0.6; margin-bottom: 8px; }
-.stat-value { font-size: 28px; font-weight: 700; }
-.table-wrapper { background: white; border-radius: 20px; overflow: hidden; box-shadow: 0 8px 32px rgba(0,0,0,0.12); }
-table { width: 100%; border-collapse: collapse; }
-thead { background: linear-gradient(135deg, #667eea, #764ba2); color: white; }
-th { padding: 16px; text-align: left; font-weight: 600; font-size: 13px; text-transform: uppercase; white-space: nowrap; }
-td { padding: 12px 14px; border-bottom: 1px solid #f1f5f9; font-size: 14px; }
-tbody tr:hover { background: #f8fafc; }
-.badge { padding: 4px 10px; border-radius: 8px; font-size: 12px; font-weight: 600; }
-.badge.pago { background: rgba(16,185,129,0.15); color: #059669; }
-.badge.aberto { background: rgba(245,158,11,0.15); color: #d97706; }
-.atraso.ok { color: #10b981; font-weight: 700; }
-.atraso.alerta { color: #f59e0b; font-weight: 700; }
-.atraso.perigo { color: #ef4444; font-weight: 700; }
-.btn-acao { background: #f1f5f9; border: none; cursor: pointer; padding: 8px 10px; border-radius: 8px; margin-right: 6px; }
-.btn-acao.editar { color: #2563eb; }
-.btn-acao.excluir { color: #ef4444; }
-.modal { display: none; position: fixed; z-index: 1000; left: 0; top: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.5); align-items: center; justify-content: center; }
-.modal.active { display: flex; }
-.modal-content { background: white; padding: 32px; border-radius: 20px; width: 90%; max-width: 500px; }
-.form-group { margin-bottom: 16px; }
-.form-group label { display: block; font-size: 13px; font-weight: 600; margin-bottom: 6px; }
-.form-group input,.form-group select { width: 100%; padding: 10px 12px; border: 1px solid #e2e8f0; border-radius: 8px; }
-.modal-actions { display: flex; gap: 12px; margin-top: 24px; }
-.modal-actions button { flex: 1; }
-@media (max-width: 768px) {.table-wrapper { overflow-x: auto; } table { min-width: 1200px; } }
+  .container { max-width: 1400px; margin: 0 auto; }
+  .header { background: rgba(255, 255, 255, 0.95); backdrop-filter: blur(20px); border-radius: 24px; padding: 32px; margin-bottom: 24px; box-shadow: 0 8px 32px rgba(0,0,0,0.12); }
+  .header h1 { font-size: 28px; font-weight: 800; background: linear-gradient(135deg, #667eea, #764ba2); -webkit-background-clip: text; -webkit-text-fill-color: transparent; margin-bottom: 8px; }
+  .header p { opacity: 0.7; }
+  .mes-navegador { display: flex; align-items: center; gap: 16px; margin-bottom: 20px; background: white; padding: 16px 20px; border-radius: 16px; box-shadow: 0 4px 12px rgba(0,0,0,0.08); }
+  .mes-navegador button { background: linear-gradient(135deg, #667eea, #764ba2); color: white; border: none; width: 40px; height: 40px; border-radius: 10px; cursor: pointer; font-size: 18px; }
+  .mes-navegador h2 { flex: 1; text-align: center; font-size: 22px; font-weight: 700; }
+  .toolbar { display: flex; gap: 12px; flex-wrap: wrap; margin-bottom: 20px; }
+  .busca { flex: 1; min-width: 250px; position: relative; }
+  .busca input { width: 100%; padding: 12px 16px 12px 44px; border: 1px solid #e2e8f0; border-radius: 12px; background: white; }
+  .busca i { position: absolute; left: 16px; top: 50%; transform: translateY(-50%); color: #94a3b8; }
+  .btn { padding: 12px 20px; border: none; border-radius: 12px; font-weight: 600; cursor: pointer; display: inline-flex; align-items: center; gap: 8px; font-size: 14px; }
+  .btn-primary { background: linear-gradient(135deg, #667eea, #764ba2); color: white; }
+  .btn-ghost { background: white; color: #475569; border: 1px solid #e2e8f0; }
+  .stats { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 16px; margin-bottom: 24px; }
+  .stat-card { background: white; padding: 20px; border-radius: 16px; box-shadow: 0 4px 12px rgba(0,0,0,0.08); }
+  .stat-label { font-size: 12px; text-transform: uppercase; opacity: 0.6; margin-bottom: 8px; }
+  .stat-value { font-size: 28px; font-weight: 700; }
+  .table-wrapper { background: white; border-radius: 20px; overflow: hidden; box-shadow: 0 8px 32px rgba(0,0,0,0.12); }
+  table { width: 100%; border-collapse: collapse; }
+  thead { background: linear-gradient(135deg, #667eea, #764ba2); color: white; }
+  th { padding: 16px; text-align: left; font-weight: 600; font-size: 13px; text-transform: uppercase; white-space: nowrap; }
+  td { padding: 12px 14px; border-bottom: 1px solid #f1f5f9; font-size: 14px; }
+  tbody tr:hover { background: #f8fafc; }
+  .badge { padding: 6px 12px; border-radius: 8px; font-size: 12px; font-weight: 600; cursor: pointer; border: none; }
+  .badge.pago { background: rgba(16,185,129,0.15); color: #059669; }
+  .badge.aberto { background: rgba(245,158,11,0.15); color: #d97706; }
+  .badge.aguardando { background: rgba(59,130,246,0.15); color: #2563eb; }
+  .badge.lancado { background: rgba(168,85,247,0.15); color: #7c3aed; }
+  .editable-date { cursor: pointer; color: #667eea; font-weight: 600; }
+  .editable-date:hover { text-decoration: underline; }
+  .atraso.ok { color: #10b981; font-weight: 700; }
+  .atraso.alerta { color: #f59e0b; font-weight: 700; }
+  .atraso.perigo { color: #ef4444; font-weight: 700; }
+  .btn-acao { background: #f1f5f9; border: none; cursor: pointer; padding: 8px 10px; border-radius: 8px; margin-right: 6px; transition: all 0.2s; }
+  .btn-acao:hover { background: #e2e8f0; }
+  .btn-acao.editar { color: #2563eb; }
+  .btn-acao.excluir { color: #ef4444; }
+  .modal { display: none; position: fixed; z-index: 1000; left: 0; top: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.5); align-items: center; justify-content: center; }
+  .modal.active { display: flex; }
+  .modal-content { background: white; padding: 32px; border-radius: 20px; width: 90%; max-width: 500px; }
+  .form-group { margin-bottom: 16px; }
+  .form-group label { display: block; font-size: 13px; font-weight: 600; margin-bottom: 6px; color: #475569; }
+  .form-group input, .form-group select { width: 100%; padding: 10px 12px; border: 1px solid #e2e8f0; border-radius: 8px; }
+  .modal-actions { display: flex; gap: 12px; margin-top: 24px; }
+  .modal-actions button { flex: 1; }
+  @media (max-width: 768px) {.table-wrapper { overflow-x: auto; } table { min-width: 1000px; }}
 </style>
 </head>
 <body>
 <div class="container">
   <div class="header">
     <h1><i class="fas fa-file-invoice-dollar"></i> Contas a Pagar - BROS</h1>
-    <p>✏️ Editar | 🗑️ Excluir</p>
+    <p>Edição inline: clica no Status ou Data pra alterar</p>
   </div>
   <div class="mes-navegador">
     <button id="btnMesAnt"><i class="fas fa-chevron-left"></i></button>
@@ -65,10 +71,12 @@ tbody tr:hover { background: #f8fafc; }
   </div>
   <div class="stats" id="stats"></div>
   <div class="toolbar">
-    <div class="busca"><i class="fas fa-search"></i><input type="text" id="busca" placeholder="Buscar..."></div>
+    <div class="busca"><i class="fas fa-search"></i><input type="text" id="busca" placeholder="Buscar conta..."></div>
     <select id="filtroStatus" style="padding:12px;border:1px solid #e2e8f0;border-radius:12px;">
-      <option value="todos">Todos</option>
-      <option value="Paga">Paga</option>
+      <option value="todos">Todos Status</option>
+      <option value="Aguardando Nota">Aguardando Nota</option>
+      <option value="Lançado">Lançado</option>
+      <option value="Pago">Pago</option>
       <option value="Em Aberto">Em Aberto</option>
     </select>
     <button class="btn btn-primary" id="btnNova"><i class="fas fa-plus"></i> Nova Conta</button>
@@ -76,9 +84,8 @@ tbody tr:hover { background: #f8fafc; }
   </div>
   <div class="table-wrapper">
     <table><thead><tr>
-      <th>Conta</th><th>Protocolo</th><th>Valor</th><th>Tipo</th><th>Recorrência</th><th>Status</th>
-      <th>Atraso</th><th>Vencimento</th><th>Docs</th><th>NF</th><th>Tít.</th><th>Prot.</th>
-      <th>Anex.</th><th>Pr.Anex</th><th>tt.</th><th>Baix.T</th><th>Ações</th>
+      <th>Conta</th><th>Protocolo</th><th>Valor</th><th>Recorrência</th><th>Status</th>
+      <th>Atraso</th><th>Vencimento</th><th>Ações</th>
     </tr></thead><tbody id="tbody"></tbody></table>
   </div>
 </div>
@@ -90,7 +97,11 @@ tbody tr:hover { background: #f8fafc; }
     <div class="form-group"><label>Valor R$</label><input type="number" id="fValor" step="0.01"></div>
     <div class="form-group"><label>Vencimento</label><input type="date" id="fVencimento"></div>
     <div class="form-group"><label>Status</label><select id="fStatus">
-      <option value="">-</option><option value="Paga">Paga</option><option value="Em Aberto">Em Aberto</option>
+      <option value="">-</option>
+      <option value="Aguardando Nota">Aguardando Nota</option>
+      <option value="Lançado">Lançado</option>
+      <option value="Pago">Pago</option>
+      <option value="Em Aberto">Em Aberto</option>
     </select></div>
     <div class="form-group"><label>Recorrência</label><select id="fRecorrencia">
       <option value="">Única</option><option value="mensal">Mensal</option>
@@ -121,6 +132,14 @@ function formatarData(d) { return!d? '-' : new Date(d + 'T00:00:00').toLocaleDat
 function salvar() { localStorage.setItem('contasBROS', JSON.stringify(contas)); renderizar(); }
 function mudarMes(direcao) { mesAtual.setMonth(mesAtual.getMonth() + direcao); renderizar(); }
 
+function getBadgeClass(status) {
+  if(status==='Pago') return 'pago';
+  if(status==='Em Aberto') return 'aberto';
+  if(status==='Aguardando Nota') return 'aguardando';
+  if(status==='Lançado') return 'lancado';
+  return '';
+}
+
 function renderizar() {
   document.getElementById('mesAtual').textContent = `${meses[mesAtual.getMonth()]} de ${mesAtual.getFullYear()}`;
   const chave = chaveMes(mesAtual);
@@ -132,20 +151,27 @@ function renderizar() {
   });
   const tbody = document.getElementById('tbody'); tbody.innerHTML = '';
   if(filtradas.length === 0) {
-    tbody.innerHTML = `<tr><td colspan="17" style="text-align:center;padding:60px;opacity:0.5;">Nenhuma conta neste mês</td></tr>`;
+    tbody.innerHTML = `<tr><td colspan="8" style="text-align:center;padding:60px;opacity:0.5;">Nenhuma conta neste mês</td></tr>`;
   } else {
     filtradas.forEach(c => {
       const atraso = calcularAtraso(c.vencimento);
       const tr = document.createElement('tr');
       tr.innerHTML = `
-        <td><strong>${c.conta}</strong></td><td>${c.protocolo || '-'}</td><td>${formatarValor(c.valor)}</td>
-        <td><span class="badge">${c.tipo}</span></td>
+        <td><strong>${c.conta}</strong></td>
+        <td>${c.protocolo || '-'}</td>
+        <td>${formatarValor(c.valor)}</td>
         <td>${c.recorrencia==='mensal'?'Mensal':'Única'}</td>
-        <td><span class="badge ${c.status==='Paga'?'pago':c.status==='Em Aberto'?'aberto':''}">${c.status||'-'}</span></td>
-        <td class="atraso ${atraso.classe}">${atraso.dias}</td><td>${formatarData(c.vencimento)}</td>
-        ${['docs','nf','titu','prot','anex','pranex','tt','baxt'].map(k =>
-          `<td><input type="checkbox" ${c[k]?'checked':''} data-id="${c.id}" data-campo="${k}"></td>`
-        ).join('')}
+        <td>
+          <select class="badge ${getBadgeClass(c.status)}" data-id="${c.id}" data-campo="status">
+            <option value="" ${!c.status?'selected':''}>-</option>
+            <option value="Aguardando Nota" ${c.status==='Aguardando Nota'?'selected':''}>Aguardando Nota</option>
+            <option value="Lançado" ${c.status==='Lançado'?'selected':''}>Lançado</option>
+            <option value="Pago" ${c.status==='Pago'?'selected':''}>Pago</option>
+            <option value="Em Aberto" ${c.status==='Em Aberto'?'selected':''}>Em Aberto</option>
+          </select>
+        </td>
+        <td class="atraso ${atraso.classe}">${atraso.dias}</td>
+        <td><input type="date" class="editable-date" value="${c.vencimento||''}" data-id="${c.id}" data-campo="vencimento"></td>
         <td>
           <button class="btn-acao editar" data-id="${c.id}"><i class="fas fa-pen"></i></button>
           <button class="btn-acao excluir" data-id="${c.id}"><i class="fas fa-trash"></i></button>
@@ -155,18 +181,18 @@ function renderizar() {
   }
   document.querySelectorAll('.btn-acao.editar').forEach(btn => btn.onclick = () => abrirModal(btn.dataset.id));
   document.querySelectorAll('.btn-acao.excluir').forEach(btn => btn.onclick = () => excluirConta(btn.dataset.id));
-  document.querySelectorAll('input[type="checkbox"]').forEach(chk => chk.onchange = () => {
-    const c = contas.find(x => String(x.id) === String(chk.dataset.id));
-    if(c) { c[chk.dataset.campo] = chk.checked; salvar(); }
+  document.querySelectorAll('select[data-campo], input[type="date"]').forEach(el => el.onchange = () => {
+    const c = contas.find(x => String(x.id) === String(el.dataset.id));
+    if(c) { c[el.dataset.campo] = el.value; salvar(); }
   });
   const total = filtradas.length;
-  const pagas = filtradas.filter(c => c.status === 'Paga').length;
-  const abertas = filtradas.filter(c => c.status === 'Em Aberto').length;
+  const pagas = filtradas.filter(c => c.status === 'Pago').length;
+  const abertas = filtradas.filter(c => c.status === 'Em Aberto' || c.status === 'Aguardando Nota' || c.status === 'Lançado').length;
   const valorTotal = filtradas.reduce((acc, c) => acc + (c.valor || 0), 0);
   document.getElementById('stats').innerHTML = `
     <div class="stat-card"><div class="stat-label">Contas do Mês</div><div class="stat-value">${total}</div></div>
     <div class="stat-card"><div class="stat-label">Pagas</div><div class="stat-value" style="color:#10b981">${pagas}</div></div>
-    <div class="stat-card"><div class="stat-label">Em Aberto</div><div class="stat-value" style="color:#f59e0b">${abertas}</div></div>
+    <div class="stat-card"><div class="stat-label">Pendentes</div><div class="stat-value" style="color:#f59e0b">${abertas}</div></div>
     <div class="stat-card"><div class="stat-label">Valor Total</div><div class="stat-value">${formatarValor(valorTotal)}</div></div>`;
 }
 
@@ -212,7 +238,7 @@ function salvarModal() {
     const c = contas.find(x => String(x.id) === String(editandoId));
     Object.assign(c, dados);
   } else {
-    contas.push({ id: crypto.randomUUID(),...dados, tipo: 'MENSAL', docs:false, nf:false, titu:false, prot:false, anex:false, pranex:false, tt:false, baxt:false, parentId: null });
+    contas.push({ id: crypto.randomUUID(),...dados, parentId: null });
   }
   fecharModal(); salvar();
 }
@@ -234,7 +260,7 @@ function gerarRecorrencias() {
     if(!jaExiste) {
       const novaData = new Date(c.vencimento); novaData.setMonth(novaData.getMonth() + 1);
       const novaVenc = `${novaData.getFullYear()}-${String(novaData.getMonth()+1).padStart(2,'0')}-${String(novaData.getDate()).padStart(2,'0')}`;
-      contas.push({...c, id: crypto.randomUUID(), vencimento: novaVenc, status: '', protocolo: '', docs:false, nf:false, titu:false, prot:false, anex:false, pranex:false, tt:false, baxt:false, parentId: c.id });
+      contas.push({...c, id: crypto.randomUUID(), vencimento: novaVenc, status: '', protocolo: '', parentId: c.id });
       criadas++;
     }
   });
