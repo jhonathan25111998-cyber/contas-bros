@@ -15,11 +15,11 @@
     padding: 24px;
     color: #1a1b26;
   }
- .container {
-    max-width: 1400px;
+.container {
+    max-width: 1500px;
     margin: 0 auto;
   }
- .header {
+.header {
     background: rgba(255, 255, 255, 0.95);
     backdrop-filter: blur(20px);
     border-radius: 24px;
@@ -27,7 +27,7 @@
     margin-bottom: 24px;
     box-shadow: 0 8px 32px rgba(0,0,0,0.12);
   }
- .header h1 {
+.header h1 {
     font-size: 28px;
     font-weight: 800;
     background: linear-gradient(135deg, #667eea, #764ba2);
@@ -35,20 +35,20 @@
     -webkit-text-fill-color: transparent;
     margin-bottom: 8px;
   }
- .header p { opacity: 0.7; font-size: 14px; }
+.header p { opacity: 0.7; font-size: 14px; }
 
- .toolbar {
+.toolbar {
     display: flex;
     gap: 12px;
     flex-wrap: wrap;
     margin-bottom: 20px;
   }
- .busca {
+.busca {
     flex: 1;
     min-width: 250px;
     position: relative;
   }
- .busca input {
+.busca input {
     width: 100%;
     padding: 12px 16px 12px 44px;
     border: 1px solid #e2e8f0;
@@ -57,10 +57,10 @@
     outline: none;
     transition: all 0.2s;
   }
- .busca input:focus { border-color: #667eea; box-shadow: 0 0 0 3px rgba(102,126,234,0.1); }
- .busca i { position: absolute; left: 16px; top: 50%; transform: translateY(-50%); color: #94a3b8; }
+.busca input:focus { border-color: #667eea; box-shadow: 0 0 0 3px rgba(102,126,234,0.1); }
+.busca i { position: absolute; left: 16px; top: 50%; transform: translateY(-50%); color: #94a3b8; }
 
- .filtros select {
+.filtros select {
     padding: 12px 16px;
     border: 1px solid #e2e8f0;
     border-radius: 12px;
@@ -69,7 +69,7 @@
     background: white;
   }
 
- .btn {
+.btn {
     padding: 12px 20px;
     border: none;
     border-radius: 12px;
@@ -81,38 +81,38 @@
     align-items: center;
     gap: 8px;
   }
- .btn-primary {
+.btn-primary {
     background: linear-gradient(135deg, #667eea, #764ba2);
     color: white;
     box-shadow: 0 4px 12px rgba(102,126,234,0.3);
   }
- .btn-primary:hover { transform: translateY(-2px); box-shadow: 0 6px 20px rgba(102,126,234,0.4); }
- .btn-ghost {
+.btn-primary:hover { transform: translateY(-2px); box-shadow: 0 6px 20px rgba(102,126,234,0.4); }
+.btn-ghost {
     background: white;
     color: #475569;
     border: 1px solid #e2e8f0;
   }
- .btn-ghost:hover { background: #f8fafc; }
+.btn-ghost:hover { background: #f8fafc; }
 
- .stats {
+.stats {
     display: grid;
     grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
     gap: 16px;
     margin-bottom: 24px;
   }
- .stat-card {
+.stat-card {
     background: white;
     padding: 20px;
     border-radius: 16px;
     box-shadow: 0 4px 12px rgba(0,0,0,0.08);
   }
- .stat-label { font-size: 12px; text-transform: uppercase; letter-spacing: 1px; opacity: 0.6; margin-bottom: 8px; }
- .stat-value { font-size: 28px; font-weight: 700; color: #1a1b26; }
- .stat-value.pago { color: #10b981; }
- .stat-value.aberto { color: #f59e0b; }
- .stat-value.atraso { color: #ef4444; }
+.stat-label { font-size: 12px; text-transform: uppercase; letter-spacing: 1px; opacity: 0.6; margin-bottom: 8px; }
+.stat-value { font-size: 28px; font-weight: 700; color: #1a1b26; }
+.stat-value.pago { color: #10b981; }
+.stat-value.aberto { color: #f59e0b; }
+.stat-value.atraso { color: #ef4444; }
 
- .table-wrapper {
+.table-wrapper {
     background: white;
     border-radius: 20px;
     overflow: hidden;
@@ -136,31 +136,31 @@
     white-space: nowrap;
   }
   td {
-    padding: 14px 16px;
+    padding: 12px 14px;
     border-bottom: 1px solid #f1f5f9;
     font-size: 14px;
   }
   tbody tr:hover { background: #f8fafc; }
   tbody tr:last-child td { border-bottom: none; }
 
- .badge {
+.badge {
     padding: 4px 10px;
     border-radius: 8px;
     font-size: 12px;
     font-weight: 600;
     display: inline-block;
   }
- .badge.pago { background: rgba(16,185,129,0.15); color: #059669; }
- .badge.aberto { background: rgba(245,158,11,0.15); color: #d97706; }
- .badge.aguardando { background: rgba(59,130,246,0.15); color: #2563eb; }
- .badge.mensal { background: rgba(102,126,234,0.15); color: #667eea; }
+.badge.pago { background: rgba(16,185,129,0.15); color: #059669; }
+.badge.aberto { background: rgba(245,158,11,0.15); color: #d97706; }
+.badge.aguardando { background: rgba(59,130,246,0.15); color: #2563eb; }
+.badge.mensal { background: rgba(102,126,234,0.15); color: #667eea; }
 
- .atraso {
+.atraso {
     font-weight: 700;
   }
- .atraso.ok { color: #10b981; }
- .atraso.alerta { color: #f59e0b; }
- .atraso.perigo { color: #ef4444; }
+.atraso.ok { color: #10b981; }
+.atraso.alerta { color: #f59e0b; }
+.atraso.perigo { color: #ef4444; }
 
   select.status-select {
     padding: 6px 10px;
@@ -176,18 +176,28 @@
     cursor: pointer;
   }
 
- .empty {
+  input.protocolo-input {
+    width: 110px;
+    padding: 6px 8px;
+    border: 1px solid #e2e8f0;
+    border-radius: 6px;
+    font-size: 13px;
+    outline: none;
+  }
+  input.protocolo-input:focus { border-color: #667eea; }
+
+.empty {
     text-align: center;
     padding: 60px 20px;
     opacity: 0.5;
   }
- .empty i { font-size: 48px; margin-bottom: 16px; }
+.empty i { font-size: 48px; margin-bottom: 16px; }
 
   @media (max-width: 768px) {
-   .table-wrapper { overflow-x: auto; }
-    table { min-width: 800px; }
-   .toolbar { flex-direction: column; }
-   .busca { width: 100%; }
+  .table-wrapper { overflow-x: auto; }
+    table { min-width: 950px; }
+  .toolbar { flex-direction: column; }
+  .busca { width: 100%; }
   }
 </style>
 </head>
@@ -235,6 +245,7 @@
           <th>Prot.</th>
           <th>Anex.</th>
           <th>Pr.Anex</th>
+          <th>Protocolo</th>
           <th>tt.</th>
           <th>Baix.T</th>
           <th>Ações</th>
@@ -247,11 +258,11 @@
 
 <script>
 let contas = JSON.parse(localStorage.getItem('contasBROS') || 'null') || [
-  {id:1, conta:'CPA BROS BRUNA CENOSKI LIMPEZA LOJA INACIO MARTINS ABRIL 2026', valor:720, tipo:'MENSAL', status:'Paga', vencimento:'2026-04-06', docs:false, nf:false, titu:false, prot:false, anex:false, pranex:false, tt:false, baxt:false},
-  {id:2, conta:'POSTO NELSON PERUSSOLO INACIO', valor:0, tipo:'MENSAL', status:'Em Aberto', vencimento:'2026-04-06', docs:false, nf:false, titu:false, prot:false, anex:false, pranex:false, tt:false, baxt:false},
-  {id:3, conta:'SAMUEL GRETSKI', valor:0, tipo:'MENSAL', status:'Aguardando NF', vencimento:'2026-04-06', docs:false, nf:false, titu:false, prot:false, anex:false, pranex:false, tt:false, baxt:false},
-  {id:4, conta:'CLAUDIO RAUCK', valor:0, tipo:'MENSAL', status:'', vencimento:'2026-04-06', docs:false, nf:false, titu:false, prot:false, anex:false, pranex:false, tt:false, baxt:false},
-  {id:5, conta:'POSTO SÃO MATEUS', valor:0, tipo:'MENSAL', status:'', vencimento:'2026-06-10', docs:false, nf:false, titu:false, prot:false, anex:false, pranex:false, tt:false, baxt:false}
+  {id:1, conta:'CPA BROS BRUNA CENOSKI LIMPEZA LOJA INACIO MARTINS ABRIL 2026', valor:720, tipo:'MENSAL', status:'Paga', vencimento:'2026-04-06', docs:false, nf:false, titu:false, prot:false, anex:false, pranex:false, protocolo:'', tt:false, baxt:false},
+  {id:2, conta:'POSTO NELSON PERUSSOLO INACIO', valor:0, tipo:'MENSAL', status:'Em Aberto', vencimento:'2026-04-06', docs:false, nf:false, titu:false, prot:false, anex:false, pranex:false, protocolo:'', tt:false, baxt:false},
+  {id:3, conta:'SAMUEL GRETSKI', valor:0, tipo:'MENSAL', status:'Aguardando NF', vencimento:'2026-04-06', docs:false, nf:false, titu:false, prot:false, anex:false, pranex:false, protocolo:'', tt:false, baxt:false},
+  {id:4, conta:'CLAUDIO RAUCK', valor:0, tipo:'MENSAL', status:'', vencimento:'2026-04-06', docs:false, nf:false, titu:false, prot:false, anex:false, pranex:false, protocolo:'', tt:false, baxt:false},
+  {id:5, conta:'POSTO SÃO MATEUS', valor:0, tipo:'MENSAL', status:'', vencimento:'2026-06-10', docs:false, nf:false, titu:false, prot:false, anex:false, pranex:false, protocolo:'', tt:false, baxt:false}
 ];
 
 function calcularAtraso(vencimento) {
@@ -293,11 +304,10 @@ function renderizar() {
 
   const tbody = document.getElementById('tbody');
   if(filtradas.length === 0) {
-    tbody.innerHTML = `<tr><td colspan="15"><div class="empty"><i class="fas fa-inbox"></i><p>Nenhuma conta encontrada</p></div></td></tr>`;
+    tbody.innerHTML = `<tr><td colspan="16"><div class="empty"><i class="fas fa-inbox"></i><p>Nenhuma conta encontrada</p></div></td></tr>`;
   } else {
     tbody.innerHTML = filtradas.map(c => {
       const atraso = calcularAtraso(c.vencimento);
-      const statusBadge = c.status === 'Paga'? 'pago' : c.status === 'Em Aberto'? 'aberto' : c.status === 'Aguardando NF'? 'aguardando' : '';
 
       return `<tr>
         <td><strong>${c.conta}</strong></td>
@@ -313,7 +323,11 @@ function renderizar() {
         </td>
         <td class="atraso ${atraso.classe}">${atraso.dias}</td>
         <td>${formatarData(c.vencimento)}</td>
-        ${['docs','nf','titu','prot','anex','pranex','tt','baxt'].map(k =>
+        ${['docs','nf','titu','prot','anex','pranex'].map(k =>
+          `<td><input type="checkbox" ${c[k]?'checked':''} onchange="toggleCheck(${c.id}, '${k}', this.checked)"></td>`
+        ).join('')}
+        <td><input type="text" class="protocolo-input" value="${c.protocolo || ''}" placeholder="Nº" onchange="mudarProtocolo(${c.id}, this.value)"></td>
+        ${['tt','baxt'].map(k =>
           `<td><input type="checkbox" ${c[k]?'checked':''} onchange="toggleCheck(${c.id}, '${k}', this.checked)"></td>`
         ).join('')}
         <td><button onclick="excluirConta(${c.id})" style="background:none;border:none;color:#ef4444;cursor:pointer;"><i class="fas fa-trash"></i></button></td>
@@ -321,7 +335,6 @@ function renderizar() {
     }).join('');
   }
 
-  // Stats
   const total = contas.length;
   const pagas = contas.filter(c => c.status === 'Paga').length;
   const abertas = contas.filter(c => c.status === 'Em Aberto').length;
@@ -356,7 +369,7 @@ function adicionarConta() {
   contas.push({
     id: crypto.randomUUID(),
     conta, valor, tipo:'MENSAL', status:'', vencimento,
-    docs:false, nf:false, titu:false, prot:false, anex:false, pranex:false, tt:false, baxt:false
+    docs:false, nf:false, titu:false, prot:false, anex:false, pranex:false, protocolo:'', tt:false, baxt:false
   });
   salvar();
 }
@@ -378,15 +391,20 @@ function toggleCheck(id, campo, valor) {
   if(c) { c[campo] = valor; salvar(); }
 }
 
+function mudarProtocolo(id, valor) {
+  const c = contas.find(x => x.id === id);
+  if(c) { c.protocolo = valor; salvar(); }
+}
+
 function exportarCSV() {
-  const headers = ['Conta','Valor','Tipo','Status','Vencimento','Docs','NF','Titu','Prot','Anex','PrAnex','tt','BaixT'];
+  const headers = ['Conta','Valor','Tipo','Status','Vencimento','Docs','NF','Titu','Prot','Anex','PrAnex','Protocolo','tt','BaixT'];
   const linhas = contas.map(c => [
-    c.conta, c.valor, c.tipo, c.status, c.vencimento,
-    c.docs, c.nf, c.titu, c.prot, c.anex, c.pranex, c.tt, c.baxt
+    `"${c.conta}"`, c.valor, c.tipo, c.status, c.vencimento,
+    c.docs, c.nf, c.titu, c.prot, c.anex, c.pranex, `"${c.protocolo || ''}"`, c.tt, c.baxt
   ].join(','));
 
   const csv = [headers.join(','),...linhas].join('\n');
-  const blob = new Blob([csv], {type: 'text/csv'});
+  const blob = new Blob([csv], {type: 'text/csv;charset=utf-8;'});
   const a = document.createElement('a');
   a.href = URL.createObjectURL(blob);
   a.download = 'contas-pagar-bros.csv';
@@ -403,20 +421,22 @@ function lerCSV(e) {
   const reader = new FileReader();
   reader.onload = ev => {
     const linhas = ev.target.result.split('\n').slice(1);
-    contas = linhas.filter(l => l.trim()).map((l, i) => {
-      const [conta, valor, tipo, status, vencimento,...checks] = l.split(',');
+    contas = linhas.filter(l => l.trim()).map((l) => {
+      const partes = l.match(/(".*?"|[^",]+)(?=\s*,|\s*$)/g) || [];
+      const [conta, valor, tipo, status, vencimento, docs, nf, titu, prot, anex, pranex, protocolo, tt, baxt] = partes.map(p => p.replace(/"/g, '').trim());
       return {
         id: crypto.randomUUID(),
         conta, valor: parseFloat(valor)||0, tipo, status, vencimento,
-        docs: checks[0]==='true', nf: checks[1]==='true', titu: checks[2]==='true',
-        prot: checks[3]==='true', anex: checks[4]==='true', pranex: checks[5]==='true',
-        tt: checks[6]==='true', baxt: checks[7]==='true'
+        docs: docs==='true', nf: nf==='true', titu: titu==='true',
+        prot: prot==='true', anex: anex==='true', pranex: pranex==='true',
+        protocolo: protocolo || '',
+        tt: tt==='true', baxt: baxt==='true'
       };
     });
     salvar();
     alert('✅ CSV importado!');
   };
-  reader.readAsText(file);
+  reader.readAsText(file, 'UTF-8');
 }
 
 document.getElementById('busca').oninput = renderizar;
