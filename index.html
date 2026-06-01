@@ -475,7 +475,7 @@ function abrirModal(id) {
   const modal = document.getElementById('modal');
 
   if(id) {
-    const c = contas.find(x => x.id === id);
+    const c = contas.find(x => String(x.id) === String(id));
     document.getElementById('modalTitulo').textContent = 'Editar Conta';
     document.getElementById('fConta').value = c.conta;
     document.getElementById('fProtocolo').value = c.protocolo || '';
@@ -519,12 +519,12 @@ function salvarModal() {
   }
 
   if(editandoId) {
-    const c = contas.find(x => x.id === editandoId);
+    const c = contas.find(x => String(x.id) === String(editandoId));
     Object.assign(c, dados);
   } else {
     contas.push({
       id: crypto.randomUUID(),
-     ...dados,
+    ...dados,
       tipo: 'MENSAL',
       docs:false, nf:false, titu:false, prot:false, anex:false, pranex:false, tt:false, baxt:false,
       parentId: null
@@ -537,13 +537,15 @@ function salvarModal() {
 
 function excluirConta(id) {
   if(confirm('Excluir esta conta permanentemente?')) {
-    contas = contas.filter(c => c.id!== id);
-    salvar();
+    const idStr = String(id);
+    contas = contas.filter(c => String(c.id)!= idStr);
+    localStorage.setItem('contasBROS', JSON.stringify(contas));
+    renderizar();
   }
 }
 
 function toggleCheck(id, campo, valor) {
-  const c = contas.find(x => x.id === id);
+  const c = contas.find(x => String(x.id) === String(id));
   if(c) { c[campo] = valor; salvar(); }
 }
 
@@ -557,7 +559,7 @@ function gerarRecorrencias() {
 
   recorrentes.forEach(c => {
     const jaExiste = contas.some(x =>
-      x.parentId === c.id && chaveMes(new Date(x.vencimento + 'T00:00:00')) === chaveProximo
+      String(x.parentId) === String(c.id) && chaveMes(new Date(x.vencimento + 'T00:00:00')) === chaveProximo
     );
 
     if(!jaExiste) {
@@ -566,7 +568,7 @@ function gerarRecorrencias() {
       const novaVenc = `${novaData.getFullYear()}-${String(novaData.getMonth()+1).padStart(2,'0')}-${String(novaData.getDate()).padStart(2,'0')}`;
 
       contas.push({
-     ...c,
+    ...c,
         id: crypto.randomUUID(),
         vencimento: novaVenc,
         status: '',
@@ -585,7 +587,6 @@ function gerarRecorrencias() {
 document.getElementById('busca').oninput = renderizar;
 document.getElementById('filtroStatus').onchange = renderizar;
 
-// Fecha modal clicando fora
 document.getElementById('modal').onclick = (e) => {
   if(e.target.id === 'modal') fecharModal();
 }
