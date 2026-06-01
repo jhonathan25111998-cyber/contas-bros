@@ -64,7 +64,6 @@
     text-align: center;
     font-size: 22px;
     font-weight: 700;
-    color: #1a1b26;
   }
 
 .toolbar {
@@ -85,9 +84,7 @@
     border-radius: 12px;
     font-size: 14px;
     outline: none;
-    transition: all 0.2s;
   }
-.busca input:focus { border-color: #667eea; box-shadow: 0 0 0 3px rgba(102,126,234,0.1); }
 .busca i { position: absolute; left: 16px; top: 50%; transform: translateY(-50%); color: #94a3b8; }
 
 .btn {
@@ -105,20 +102,12 @@
 .btn-primary {
     background: linear-gradient(135deg, #667eea, #764ba2);
     color: white;
-    box-shadow: 0 4px 12px rgba(102,126,234,0.3);
   }
-.btn-primary:hover { transform: translateY(-2px); }
 .btn-ghost {
     background: white;
     color: #475569;
     border: 1px solid #e2e8f0;
   }
-.btn-ghost:hover { background: #f8fafc; }
-.btn-danger {
-    background: #ef4444;
-    color: white;
-  }
-.btn-danger:hover { background: #dc2626; }
 
 .stats {
     display: grid;
@@ -133,9 +122,7 @@
     box-shadow: 0 4px 12px rgba(0,0,0,0.08);
   }
 .stat-label { font-size: 12px; text-transform: uppercase; letter-spacing: 1px; opacity: 0.6; margin-bottom: 8px; }
-.stat-value { font-size: 28px; font-weight: 700; color: #1a1b26; }
-.stat-value.pago { color: #10b981; }
-.stat-value.aberto { color: #f59e0b; }
+.stat-value { font-size: 28px; font-weight: 700; }
 
 .table-wrapper {
     background: white;
@@ -172,7 +159,6 @@
     border-radius: 8px;
     font-size: 12px;
     font-weight: 600;
-    display: inline-block;
   }
 .badge.pago { background: rgba(16,185,129,0.15); color: #059669; }
 .badge.aberto { background: rgba(245,158,11,0.15); color: #d97706; }
@@ -182,36 +168,20 @@
 .atraso.alerta { color: #f59e0b; font-weight: 700; }
 .atraso.perigo { color: #ef4444; font-weight: 700; }
 
-  select.status-select {
-    padding: 6px 10px;
-    border-radius: 8px;
-    border: 1px solid #e2e8f0;
-    font-size: 13px;
-    cursor: pointer;
-  }
-
-  input.edit-input {
-    width: 100%;
-    min-width: 200px;
-    padding: 6px 8px;
-    border: 1px solid #e2e8f0;
-    border-radius: 6px;
-    font-size: 13px;
-    outline: none;
-  }
-  input.edit-input:focus { border-color: #667eea; }
-  input.protocolo-input { min-width: 110px; max-width: 140px; }
-
 .btn-acao {
-    background: none;
+    background: #f1f5f9;
     border: none;
     cursor: pointer;
-    padding: 6px;
-    border-radius: 6px;
+    padding: 8px 10px;
+    border-radius: 8px;
+    margin-right: 6px;
     transition: all 0.2s;
+    font-size: 14px;
   }
-.btn-acao:hover { background: #fee2e2; }
-.btn-acao i { color: #ef4444; }
+.btn-acao.editar { color: #2563eb; }
+.btn-acao.editar:hover { background: #dbeafe; }
+.btn-acao.excluir { color: #ef4444; }
+.btn-acao.excluir:hover { background: #fee2e2; }
 
 .empty {
     text-align: center;
@@ -220,10 +190,70 @@
   }
 .empty i { font-size: 48px; margin-bottom: 16px; }
 
+/* MODAL */
+.modal {
+    display: none;
+    position: fixed;
+    z-index: 1000;
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0,0,0,0.5);
+    backdrop-filter: blur(4px);
+    align-items: center;
+    justify-content: center;
+  }
+.modal.active { display: flex; }
+.modal-content {
+    background: white;
+    padding: 32px;
+    border-radius: 20px;
+    width: 90%;
+    max-width: 500px;
+    max-height: 90vh;
+    overflow-y: auto;
+    box-shadow: 0 20px 60px rgba(0,0,0,0.3);
+  }
+.modal-content h3 {
+    margin-bottom: 24px;
+    font-size: 20px;
+    color: #1a1b26;
+  }
+.form-group {
+    margin-bottom: 16px;
+  }
+.form-group label {
+    display: block;
+    font-size: 13px;
+    font-weight: 600;
+    margin-bottom: 6px;
+    color: #475569;
+  }
+.form-group input,.form-group select {
+    width: 100%;
+    padding: 10px 12px;
+    border: 1px solid #e2e8f0;
+    border-radius: 8px;
+    font-size: 14px;
+    font-family: 'Poppins', sans-serif;
+  }
+.form-group input:focus,.form-group select:focus {
+    outline: none;
+    border-color: #667eea;
+  }
+.modal-actions {
+    display: flex;
+    gap: 12px;
+    margin-top: 24px;
+  }
+.modal-actions button {
+    flex: 1;
+  }
+
   @media (max-width: 768px) {
 .table-wrapper { overflow-x: auto; }
-    table { min-width: 1100px; }
-.toolbar { flex-direction: column; }
+    table { min-width: 1200px; }
   }
 </style>
 </head>
@@ -231,7 +261,7 @@
 <div class="container">
   <div class="header">
     <h1><i class="fas fa-file-invoice-dollar"></i> Contas a Pagar - BROS</h1>
-    <p>Navegue pelos meses, edite direto na tabela. Dados salvos no navegador.</p>
+    <p>Clique em ✏️ pra editar, 🗑️ pra excluir. Navegue pelos meses no topo.</p>
   </div>
 
   <div class="mes-navegador">
@@ -253,11 +283,8 @@
       <option value="Em Aberto">Em Aberto</option>
       <option value="Aguardando NF">Aguardando NF</option>
     </select>
-    <button class="btn btn-primary" onclick="adicionarConta()"><i class="fas fa-plus"></i> Nova Conta</button>
+    <button class="btn btn-primary" onclick="abrirModal(null)"><i class="fas fa-plus"></i> Nova Conta</button>
     <button class="btn btn-ghost" onclick="gerarRecorrencias()"><i class="fas fa-sync"></i> Gerar Mês Seguinte</button>
-    <button class="btn btn-ghost" onclick="duplicarMes()"><i class="fas fa-copy"></i> Duplicar Mês</button>
-    <button class="btn btn-ghost" onclick="exportarCSV()"><i class="fas fa-download"></i> Exportar</button>
-    <button class="btn btn-ghost" onclick="limparDados()"><i class="fas fa-broom"></i> Limpar Tudo</button>
   </div>
 
   <div class="table-wrapper">
@@ -288,9 +315,53 @@
   </div>
 </div>
 
+<!-- MODAL EDIÇÃO -->
+<div id="modal" class="modal">
+  <div class="modal-content">
+    <h3 id="modalTitulo">Editar Conta</h3>
+    <div class="form-group">
+      <label>Nome da Conta</label>
+      <input type="text" id="fConta">
+    </div>
+    <div class="form-group">
+      <label>Nº Protocolo</label>
+      <input type="text" id="fProtocolo">
+    </div>
+    <div class="form-group">
+      <label>Valor R$</label>
+      <input type="number" id="fValor" step="0.01">
+    </div>
+    <div class="form-group">
+      <label>Vencimento</label>
+      <input type="date" id="fVencimento">
+    </div>
+    <div class="form-group">
+      <label>Status</label>
+      <select id="fStatus">
+        <option value="">-</option>
+        <option value="Paga">Paga</option>
+        <option value="Em Aberto">Em Aberto</option>
+        <option value="Aguardando NF">Aguardando NF</option>
+      </select>
+    </div>
+    <div class="form-group">
+      <label>Recorrência</label>
+      <select id="fRecorrencia">
+        <option value="">Única</option>
+        <option value="mensal">Mensal</option>
+      </select>
+    </div>
+    <div class="modal-actions">
+      <button class="btn btn-ghost" onclick="fecharModal()">Cancelar</button>
+      <button class="btn btn-primary" onclick="salvarModal()">Salvar</button>
+    </div>
+  </div>
+</div>
+
 <script>
 let mesAtual = new Date();
 mesAtual.setDate(1);
+let editandoId = null;
 
 let contas = JSON.parse(localStorage.getItem('contasBROS') || 'null') || [];
 
@@ -349,36 +420,27 @@ function renderizar() {
 
   const tbody = document.getElementById('tbody');
   if(filtradas.length === 0) {
-    tbody.innerHTML = `<tr><td colspan="17"><div class="empty"><i class="fas fa-calendar-check"></i><p>Nenhuma conta neste mês. Clique em "Nova Conta" ou "Duplicar Mês".</p></div></td></tr>`;
+    tbody.innerHTML = `<tr><td colspan="17"><div class="empty"><i class="fas fa-calendar-check"></i><p>Nenhuma conta neste mês</p></div></td></tr>`;
   } else {
     tbody.innerHTML = filtradas.map(c => {
       const atraso = calcularAtraso(c.vencimento);
 
       return `<tr>
-        <td><input type="text" class="edit-input" value="${c.conta}" onchange="mudarCampo('${c.id}', 'conta', this.value)"></td>
-        <td><input type="text" class="edit-input protocolo-input" value="${c.protocolo || ''}" placeholder="Nº" onchange="mudarCampo('${c.id}', 'protocolo', this.value)"></td>
-        <td><input type="number" class="edit-input" style="min-width:100px" value="${c.valor || 0}" onchange="mudarCampo('${c.id}', 'valor', parseFloat(this.value)||0)"></td>
+        <td><strong>${c.conta}</strong></td>
+        <td>${c.protocolo || '-'}</td>
+        <td>${formatarValor(c.valor)}</td>
         <td><span class="badge mensal">${c.tipo}</span></td>
-        <td>
-          <select class="status-select" onchange="mudarCampo('${c.id}', 'recorrencia', this.value)">
-            <option value="" ${c.recorrencia===''?'selected':''}>Única</option>
-            <option value="mensal" ${c.recorrencia==='mensal'?'selected':''}>Mensal</option>
-          </select>
-        </td>
-        <td>
-          <select class="status-select" onchange="mudarCampo('${c.id}', 'status', this.value)">
-            <option value="">-</option>
-            <option value="Paga" ${c.status==='Paga'?'selected':''}>Paga</option>
-            <option value="Em Aberto" ${c.status==='Em Aberto'?'selected':''}>Em Aberto</option>
-            <option value="Aguardando NF" ${c.status==='Aguardando NF'?'selected':''}>Aguardando NF</option>
-          </select>
-        </td>
+        <td>${c.recorrencia==='mensal'?'<span class="badge" style="background:rgba(168,85,247,0.15);color:#a855f7;">Mensal</span>':'Única'}</td>
+        <td><span class="badge ${c.status==='Paga'?'pago':c.status==='Em Aberto'?'aberto':''}">${c.status||'-'}</span></td>
         <td class="atraso ${atraso.classe}">${atraso.dias}</td>
-        <td><input type="date" class="edit-input" value="${c.vencimento}" onchange="mudarCampo('${c.id}', 'vencimento', this.value)"></td>
+        <td>${formatarData(c.vencimento)}</td>
         ${['docs','nf','titu','prot','anex','pranex','tt','baxt'].map(k =>
-          `<td><input type="checkbox" ${c[k]?'checked':''} onchange="mudarCampo('${c.id}', '${k}', this.checked)"></td>`
+          `<td><input type="checkbox" ${c[k]?'checked':''} onchange="toggleCheck('${c.id}', '${k}', this.checked)"></td>`
         ).join('')}
-        <td><button class="btn-acao" onclick="excluirConta('${c.id}')" title="Excluir conta"><i class="fas fa-trash"></i></button></td>
+        <td>
+          <button class="btn-acao editar" onclick="abrirModal('${c.id}')" title="Editar"><i class="fas fa-pen"></i></button>
+          <button class="btn-acao excluir" onclick="excluirConta('${c.id}')" title="Excluir"><i class="fas fa-trash"></i></button>
+        </td>
       </tr>`;
     }).join('');
   }
@@ -395,11 +457,11 @@ function renderizar() {
     </div>
     <div class="stat-card">
       <div class="stat-label">Pagas</div>
-      <div class="stat-value pago">${pagas}</div>
+      <div class="stat-value" style="color:#10b981">${pagas}</div>
     </div>
     <div class="stat-card">
       <div class="stat-label">Em Aberto</div>
-      <div class="stat-value aberto">${abertas}</div>
+      <div class="stat-value" style="color:#f59e0b">${abertas}</div>
     </div>
     <div class="stat-card">
       <div class="stat-label">Valor Total</div>
@@ -408,22 +470,68 @@ function renderizar() {
   `;
 }
 
-function adicionarConta() {
-  const conta = prompt('Nome da conta:');
-  if(!conta) return;
-  const valor = parseFloat(prompt('Valor R$:') || 0);
-  const dia = prompt('Dia do vencimento 1-31:') || '5';
-  const recorrencia = confirm('É recorrência mensal? OK=Sim / Cancelar=Não')? 'mensal' : '';
+function abrirModal(id) {
+  editandoId = id;
+  const modal = document.getElementById('modal');
 
-  const ano = mesAtual.getFullYear();
-  const mes = String(mesAtual.getMonth()+1).padStart(2,'0');
-  const vencimento = `${ano}-${mes}-${String(dia).padStart(2,'0')}`;
+  if(id) {
+    const c = contas.find(x => x.id === id);
+    document.getElementById('modalTitulo').textContent = 'Editar Conta';
+    document.getElementById('fConta').value = c.conta;
+    document.getElementById('fProtocolo').value = c.protocolo || '';
+    document.getElementById('fValor').value = c.valor || 0;
+    document.getElementById('fVencimento').value = c.vencimento;
+    document.getElementById('fStatus').value = c.status;
+    document.getElementById('fRecorrencia').value = c.recorrencia || '';
+  } else {
+    document.getElementById('modalTitulo').textContent = 'Nova Conta';
+    const ano = mesAtual.getFullYear();
+    const mes = String(mesAtual.getMonth()+1).padStart(2,'0');
+    document.getElementById('fConta').value = '';
+    document.getElementById('fProtocolo').value = '';
+    document.getElementById('fValor').value = 0;
+    document.getElementById('fVencimento').value = `${ano}-${mes}-05`;
+    document.getElementById('fStatus').value = '';
+    document.getElementById('fRecorrencia').value = '';
+  }
 
-  contas.push({
-    id: crypto.randomUUID(),
-    conta, protocolo:'', valor, tipo:'MENSAL', recorrencia, status:'', vencimento,
-    docs:false, nf:false, titu:false, prot:false, anex:false, pranex:false, tt:false, baxt:false, parentId:null
-  });
+  modal.classList.add('active');
+}
+
+function fecharModal() {
+  document.getElementById('modal').classList.remove('active');
+  editandoId = null;
+}
+
+function salvarModal() {
+  const dados = {
+    conta: document.getElementById('fConta').value,
+    protocolo: document.getElementById('fProtocolo').value,
+    valor: parseFloat(document.getElementById('fValor').value) || 0,
+    vencimento: document.getElementById('fVencimento').value,
+    status: document.getElementById('fStatus').value,
+    recorrencia: document.getElementById('fRecorrencia').value
+  };
+
+  if(!dados.conta) {
+    alert('Preencha o nome da conta');
+    return;
+  }
+
+  if(editandoId) {
+    const c = contas.find(x => x.id === editandoId);
+    Object.assign(c, dados);
+  } else {
+    contas.push({
+      id: crypto.randomUUID(),
+     ...dados,
+      tipo: 'MENSAL',
+      docs:false, nf:false, titu:false, prot:false, anex:false, pranex:false, tt:false, baxt:false,
+      parentId: null
+    });
+  }
+
+  fecharModal();
   salvar();
 }
 
@@ -434,7 +542,7 @@ function excluirConta(id) {
   }
 }
 
-function mudarCampo(id, campo, valor) {
+function toggleCheck(id, campo, valor) {
   const c = contas.find(x => x.id === id);
   if(c) { c[campo] = valor; salvar(); }
 }
@@ -458,7 +566,7 @@ function gerarRecorrencias() {
       const novaVenc = `${novaData.getFullYear()}-${String(novaData.getMonth()+1).padStart(2,'0')}-${String(novaData.getDate()).padStart(2,'0')}`;
 
       contas.push({
-      ...c,
+     ...c,
         id: crypto.randomUUID(),
         vencimento: novaVenc,
         status: '',
@@ -474,65 +582,13 @@ function gerarRecorrencias() {
   salvar();
 }
 
-function duplicarMes() {
-  const proximoMes = new Date(mesAtual);
-  proximoMes.setMonth(proximoMes.getMonth() + 1);
-  const chaveProximo = chaveMes(proximoMes);
-
-  const doMes = contas.filter(c => chaveMes(new Date(c.vencimento + 'T00:00:00')) === chaveMes(mesAtual));
-  let criadas = 0;
-
-  doMes.forEach(c => {
-    const jaExiste = contas.some(x =>
-      x.conta === c.conta && chaveMes(new Date(x.vencimento + 'T00:00:00')) === chaveProximo
-    );
-    if(!jaExiste) {
-      const novaData = new Date(c.vencimento);
-      novaData.setMonth(novaData.getMonth() + 1);
-      const novaVenc = `${novaData.getFullYear()}-${String(novaData.getMonth()+1).padStart(2,'0')}-${String(novaData.getDate()).padStart(2,'0')}`;
-
-      contas.push({
-      ...c,
-        id: crypto.randomUUID(),
-        vencimento: novaVenc,
-        status: '',
-        protocolo: '',
-        docs:false, nf:false, titu:false, prot:false, anex:false, pranex:false, tt:false, baxt:false,
-        parentId: null
-      });
-      criadas++;
-    }
-  });
-
-  alert(`✅ ${criadas} conta(s) duplicada(s) para ${meses[proximoMes.getMonth()]}`);
-  salvar();
-}
-
-function exportarCSV() {
-  const headers = ['Conta','Protocolo','Valor','Tipo','Recorrencia','Status','Vencimento','Docs','NF','Titu','Prot','Anex','PrAnex','tt','BaixT'];
-  const linhas = contas.map(c => [
-    `"${c.conta}"`, `"${c.protocolo || ''}"`, c.valor, c.tipo, c.recorrencia, c.status, c.vencimento,
-    c.docs, c.nf, c.titu, c.prot, c.anex, c.pranex, c.tt, c.baxt
-  ].join(','));
-
-  const csv = [headers.join(','),...linhas].join('\n');
-  const blob = new Blob([csv], {type: 'text/csv;charset=utf-8;'});
-  const a = document.createElement('a');
-  a.href = URL.createObjectURL(blob);
-  a.download = `contas-${chaveMes(mesAtual)}.csv`;
-  a.click();
-}
-
-function limparDados() {
-  if(confirm('APAGAR TODAS AS CONTAS? Isso não tem volta.')) {
-    contas = [];
-    localStorage.removeItem('contasBROS');
-    renderizar();
-  }
-}
-
 document.getElementById('busca').oninput = renderizar;
 document.getElementById('filtroStatus').onchange = renderizar;
+
+// Fecha modal clicando fora
+document.getElementById('modal').onclick = (e) => {
+  if(e.target.id === 'modal') fecharModal();
+}
 
 renderizar();
 </script>
